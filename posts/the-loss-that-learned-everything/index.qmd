@@ -1,0 +1,16 @@
+---
+title: "The Loss That Learned Everything"
+date: "2025-04-04"
+description: "An exploration of loss functions and their role in machine learning optimization"
+categories: [Machine Learning, Deep Learning, Maths]
+---
+
+<meta http-equiv="refresh" content="1; url=https://siddhant.bearblog.dev/the-loss-that-learned-everything/">
+
+<script>
+  window.location.href = "https://siddhant.bearblog.dev/the-loss-that-learned-everything/";
+</script>
+
+Redirecting to the full article...
+
+If you are not redirected automatically, [click here to read the article](https://siddhant.bearblog.dev/the-loss-that-learned-everything/).
