@@ -1,14 +1,16 @@
 [
   {
-    "listing": "/blog.html",
+    "listing": "/index.html",
     "items": [
-      "/posts/why-positional-encoding/index.html"
+      "/posts/why-positional-encoding/index.html",
+      "/posts/the-loss-that-learned-everything/index.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/blog.html",
     "items": [
-      "/posts/why-positional-encoding/index.html"
+      "/posts/why-positional-encoding/index.html",
+      "/posts/the-loss-that-learned-everything/index.html"
     ]
   }
 ]

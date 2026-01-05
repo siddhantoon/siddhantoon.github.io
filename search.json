@@ -1,152 +1,5 @@
 [
   {
-    "objectID": "PROJECT_SETUP.html",
-    "href": "PROJECT_SETUP.html",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Automated publishing system for converting Jupyter notebooks to Quarto blog posts with Obsidian sync.\n\n\n\n[Your Quarto Blog Location]\n├── blog/                    # Quarto site (GitHub Pages)\n│   ├── _quarto.yml\n│   ├── index.qmd\n│   ├── about.qmd\n│   └── posts/              # Published posts\n│       └── post-name/\n│           ├── index.qmd\n│           └── attachments/  # images, gifs, videos\n\n[Anywhere on your machine]\n└── my-notebook.ipynb       # Can be in any directory\n\n[Your Obsidian Vault Path - you'll provide]\n└── blog/                   # Synced blog posts (script creates this)\n    └── post-name.md\n\n\n\n\nWork in Jupyter notebooks anywhere on your machine\nClean up and restructure notebook manually when ready\nRun: python publish.py /path/to/my-notebook.ipynb\nReview changes, then commit and push\n\n\n\n\n\nInput: Accept absolute path to notebook (can be anywhere)\nConversion: Convert notebook to Quarto format (.qmd)\nNo re-execution: Use notebook outputs as-is (preserve all outputs)\nNo automatic cleanup: Publish notebook exactly as saved\nAsset handling: Copy images/gifs/videos to posts/post-name/attachments/\nObsidian sync: Create full markdown copy in {obsidian-vault}/blog/\nGit workflow: Prepare files, show changes for review, then commit/push\n\n\n\n\nThe script will need to know: - Path to your Quarto blog directory (e.g., C:\\Users\\Lenovo\\Siddhant-drive\\2025\\blog) - Path to your Obsidian vault (you’ll provide this)\n\n\n\nAdd metadata to notebook using YAML in a raw cell at the top:\n---\ntitle: \"My Post Title\"\ndate: \"2025-11-29\"\ncategories:\n  - machine-learning\n  - python\ndescription: \"Brief description of the post\"\n---\nMinimal required fields (to start): - title - date - categories (at least one)\n\n\n\n\nImages stored in: posts/post-name/attachments/\nReferenced as: attachments/image.png (relative path)\nQuarto will resolve these correctly when rendering\n\n\n\n\n\nFormat: Complete markdown\nIncludes: Text blocks, code blocks, attachment URLs\nLocation: {obsidian-vault}/blog/post-name.md\nShould be as close to the published post as possible\n\n\n\n\n\nRepository: TBD (will create)\nBranch: main or gh-pages (TBD)\nQuarto will render to _site/ directory\n\n\n\n\n\nCreate Quarto blog directory\nInitialize Quarto blog\nCreate GitHub repository\nSet up GitHub Pages\nCreate publish.py script with config\nTest with sample notebook\n\n\n\n\n\nNotebooks can live anywhere on the machine\nScript accepts full path to notebook\nObsidian vault path will be provided by you\nScript creates blog/ folder in Obsidian vault if it doesn’t exist\nKeep it minimal to start, iterate as needed"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#overview",
-    "href": "PROJECT_SETUP.html#overview",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Automated publishing system for converting Jupyter notebooks to Quarto blog posts with Obsidian sync."
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#folder-structure",
-    "href": "PROJECT_SETUP.html#folder-structure",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "[Your Quarto Blog Location]\n├── blog/                    # Quarto site (GitHub Pages)\n│   ├── _quarto.yml\n│   ├── index.qmd\n│   ├── about.qmd\n│   └── posts/              # Published posts\n│       └── post-name/\n│           ├── index.qmd\n│           └── attachments/  # images, gifs, videos\n\n[Anywhere on your machine]\n└── my-notebook.ipynb       # Can be in any directory\n\n[Your Obsidian Vault Path - you'll provide]\n└── blog/                   # Synced blog posts (script creates this)\n    └── post-name.md"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#workflow",
-    "href": "PROJECT_SETUP.html#workflow",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Work in Jupyter notebooks anywhere on your machine\nClean up and restructure notebook manually when ready\nRun: python publish.py /path/to/my-notebook.ipynb\nReview changes, then commit and push"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#publishing-script-behavior",
-    "href": "PROJECT_SETUP.html#publishing-script-behavior",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Input: Accept absolute path to notebook (can be anywhere)\nConversion: Convert notebook to Quarto format (.qmd)\nNo re-execution: Use notebook outputs as-is (preserve all outputs)\nNo automatic cleanup: Publish notebook exactly as saved\nAsset handling: Copy images/gifs/videos to posts/post-name/attachments/\nObsidian sync: Create full markdown copy in {obsidian-vault}/blog/\nGit workflow: Prepare files, show changes for review, then commit/push"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#configuration",
-    "href": "PROJECT_SETUP.html#configuration",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "The script will need to know: - Path to your Quarto blog directory (e.g., C:\\Users\\Lenovo\\Siddhant-drive\\2025\\blog) - Path to your Obsidian vault (you’ll provide this)"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#notebook-metadata-convention",
-    "href": "PROJECT_SETUP.html#notebook-metadata-convention",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Add metadata to notebook using YAML in a raw cell at the top:\n---\ntitle: \"My Post Title\"\ndate: \"2025-11-29\"\ncategories:\n  - machine-learning\n  - python\ndescription: \"Brief description of the post\"\n---\nMinimal required fields (to start): - title - date - categories (at least one)"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#imageasset-references",
-    "href": "PROJECT_SETUP.html#imageasset-references",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Images stored in: posts/post-name/attachments/\nReferenced as: attachments/image.png (relative path)\nQuarto will resolve these correctly when rendering"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#obsidian-copy",
-    "href": "PROJECT_SETUP.html#obsidian-copy",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Format: Complete markdown\nIncludes: Text blocks, code blocks, attachment URLs\nLocation: {obsidian-vault}/blog/post-name.md\nShould be as close to the published post as possible"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#github-pages-publishing",
-    "href": "PROJECT_SETUP.html#github-pages-publishing",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Repository: TBD (will create)\nBranch: main or gh-pages (TBD)\nQuarto will render to _site/ directory"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#current-status",
-    "href": "PROJECT_SETUP.html#current-status",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Create Quarto blog directory\nInitialize Quarto blog\nCreate GitHub repository\nSet up GitHub Pages\nCreate publish.py script with config\nTest with sample notebook"
-  },
-  {
-    "objectID": "PROJECT_SETUP.html#notes",
-    "href": "PROJECT_SETUP.html#notes",
-    "title": "Quarto Blog Publishing System - Project Setup",
-    "section": "",
-    "text": "Notebooks can live anywhere on the machine\nScript accepts full path to notebook\nObsidian vault path will be provided by you\nScript creates blog/ folder in Obsidian vault if it doesn’t exist\nKeep it minimal to start, iterate as needed"
-  },
-  {
-    "objectID": "plan.html",
-    "href": "plan.html",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "Create a streamlined system to publish blogs from Obsidian notes and Jupyter notebooks to a Quarto blog site, with one-click deployment to GitHub Pages.\n\n\n\n\nSource formats: Obsidian markdown notes, Jupyter notebooks\nTarget: Quarto blog site\nPublishing: GitHub Pages\nBehavior: Copy files (keep originals), error if slug exists\nMetadata: title, date\n\n\n\n\n\n\n\nCreate scripts/ directory\nCreate config.yaml with placeholders for:\n\nvault_path\nattachments_folder\nAny other settings\n\nSet up publish.py with CLI structure (using argparse)\n\n\n\n\n\nRead Obsidian markdown file\nExtract title (from filename or first # Heading)\nFind all image references:\n\n![[image.png]] (Obsidian format)\n![alt](attachments/image.png) (Standard markdown)\n![alt](../attachments/image.png) (Relative paths)\n\nCreate posts/&lt;slug&gt;/ directory (error if exists)\nCopy images to post directory\nConvert image references to ![alt](image.png)\nGenerate front matter (title, date)\nWrite posts/&lt;slug&gt;/index.qmd\n\n\n\n\n\nCopy .ipynb to posts/&lt;slug&gt;/\nAdd front matter (Quarto handles notebooks natively)\nHandle external images if any\n\n\n\n\n\nWrapper around quarto publish gh-pages\n\n\n\n\n\n# Convert Obsidian note to Quarto post\npython scripts/publish.py obsidian &lt;note-path&gt; --slug &lt;post-slug&gt;\n\n# Convert Jupyter notebook to Quarto post\npython scripts/publish.py notebook &lt;notebook-path&gt; --slug &lt;post-slug&gt;\n\n# Publish to GitHub Pages\npython scripts/publish.py deploy\n\n\n\n# config.yaml\nvault_path: \"path/to/obsidian/vault\"\nattachments_folder: \"attachments\"  # or whatever folder name is used\n\n\n\n\nFor Jupyter: Use Quarto’s native .ipynb support\nFor Obsidian: Custom conversion handling image attachments\nMetadata convention: title (from filename/H1), date (today’s date)"
-  },
-  {
-    "objectID": "plan.html#overview",
-    "href": "plan.html#overview",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "Create a streamlined system to publish blogs from Obsidian notes and Jupyter notebooks to a Quarto blog site, with one-click deployment to GitHub Pages."
-  },
-  {
-    "objectID": "plan.html#requirements",
-    "href": "plan.html#requirements",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "Source formats: Obsidian markdown notes, Jupyter notebooks\nTarget: Quarto blog site\nPublishing: GitHub Pages\nBehavior: Copy files (keep originals), error if slug exists\nMetadata: title, date"
-  },
-  {
-    "objectID": "plan.html#implementation-plan",
-    "href": "plan.html#implementation-plan",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "Create scripts/ directory\nCreate config.yaml with placeholders for:\n\nvault_path\nattachments_folder\nAny other settings\n\nSet up publish.py with CLI structure (using argparse)\n\n\n\n\n\nRead Obsidian markdown file\nExtract title (from filename or first # Heading)\nFind all image references:\n\n![[image.png]] (Obsidian format)\n![alt](attachments/image.png) (Standard markdown)\n![alt](../attachments/image.png) (Relative paths)\n\nCreate posts/&lt;slug&gt;/ directory (error if exists)\nCopy images to post directory\nConvert image references to ![alt](image.png)\nGenerate front matter (title, date)\nWrite posts/&lt;slug&gt;/index.qmd\n\n\n\n\n\nCopy .ipynb to posts/&lt;slug&gt;/\nAdd front matter (Quarto handles notebooks natively)\nHandle external images if any\n\n\n\n\n\nWrapper around quarto publish gh-pages"
-  },
-  {
-    "objectID": "plan.html#cli-commands",
-    "href": "plan.html#cli-commands",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "# Convert Obsidian note to Quarto post\npython scripts/publish.py obsidian &lt;note-path&gt; --slug &lt;post-slug&gt;\n\n# Convert Jupyter notebook to Quarto post\npython scripts/publish.py notebook &lt;notebook-path&gt; --slug &lt;post-slug&gt;\n\n# Publish to GitHub Pages\npython scripts/publish.py deploy"
-  },
-  {
-    "objectID": "plan.html#configuration-structure",
-    "href": "plan.html#configuration-structure",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "# config.yaml\nvault_path: \"path/to/obsidian/vault\"\nattachments_folder: \"attachments\"  # or whatever folder name is used"
-  },
-  {
-    "objectID": "plan.html#notes",
-    "href": "plan.html#notes",
-    "title": "Blog Publishing System - Implementation Plan",
-    "section": "",
-    "text": "For Jupyter: Use Quarto’s native .ipynb support\nFor Obsidian: Custom conversion handling image attachments\nMetadata convention: title (from filename/H1), date (today’s date)"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Siddhant's Blog",
-    "section": "",
-    "text": "(Content coming soon)"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Siddhant's Blog",
-    "section": "",
-    "text": "Hi, I’m Siddhant 👋\nThis blog is my space to learn in public — to share what I discover and connect with others on a similar path. If you’re into (or wanna get into) Deep Learning, LLMs, or Python, you’re in the right place.\nI currently work as a Data Scientist-II at Wolters Kluwer. Over the past 3 years, I’ve been building and scaling intelligent pipelines in the Document AI space — processing unstructured documents. Recently, building systems around Retrieval-Augmented Generation (RAG) and smart search.\nOn the side, I’ve freelanced as a Python dev and AI engineer — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.\nBefore AI fever, I was deep into robotics 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into computer vision, where I worked with both classical algorithms and deep nn models like YOLO, ResNets, and GANs.\nThese days, I’m focused on learning transformers and LLM architectures in depth. Alongside, exploring Kaggle competitions to stay hands-on and push my thinking through experimentation.\n\nIf you’re curious about NLP, LLMs, document intelligence, or building scalable AI systems — I’d love to connect.\n👉 Available for freelance or consulting in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.\n🚀 Up for teaming on Kaggle or hackathons? Ping me on Discord — always down to learn together.\n\n\nBlogs\n\n\n\n\n\nwhat/why/how positional encodings?\n\n\n\n\n\n\n\n\nNov 29, 2025\n\n\n\n\n\nNo matching items\n\n\nShow More →"
-  },
-  {
     "objectID": "posts/why-positional-encoding/index.html",
     "href": "posts/why-positional-encoding/index.html",
     "title": "what/why/how positional encodings?",
@@ -187,5 +40,75 @@
     "title": "what/why/how positional encodings?",
     "section": "conclusion",
     "text": "conclusion\nthis is most widely used way to encode positional info, there are ways to improve upon it\ntopics i’ll be exploring later -\n\nPosition Interpolation\nYaRN\nNTK-Aware scaling"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Siddhant's Blog",
+    "section": "",
+    "text": "Hi, I’m Siddhant 👋\nThis blog is my space to learn in public — to share what I discover and connect with others on a similar path. If you’re into (or wanna get into) Deep Learning, LLMs, or Python, you’re in the right place.\nI currently work as a Machine Learning Engineer at OMEGA Labs. Over the past 3 years, I’ve been building and scaling intelligent pipelines in the Document AI space — processing unstructured documents. Recently, building systems around Retrieval-Augmented Generation (RAG) and smart search.\nOn the side, I’ve freelanced as a Python dev and AI engineer — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.\nBefore AI fever, I was deep into robotics 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into computer vision, where I worked with both classical algorithms and deep nn models like YOLO, ResNets, and GANs.\nThese days, I’m focused on learning transformers and LLM architectures in depth. Alongside, exploring Kaggle competitions to stay hands-on and push my thinking through experimentation.\n\nIf you’re curious about NLP, LLMs, document intelligence, or building scalable AI systems — I’d love to connect.\n👉 Available for freelance or consulting in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.\n🚀 Up for teaming on Kaggle or hackathons? Ping me on Discord — always down to learn together.\n\n\nBlogs\n\n\n\n\n\nwhat/why/how positional encodings?\n\n\n\n\n\n\n\n\nNov 29, 2025\n\n\n\n\n\n\n\nThe Loss That Learned Everything\n\n\nAn exploration of loss functions and their role in machine learning optimization\n\n\n\n\n\nApr 4, 2025\n\n\n\n\n\nNo matching items\n\n\nShow More →"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Siddhant's Blog",
+    "section": "",
+    "text": "Hi, I’m Siddhant 👋 I’m a Machine Learning Engineer who loves building practical AI systems and sharing what I learn along the way.\nThis blog is my space to learn in public — a place where I document concepts, experiments, failures, and “aha” moments. If you’re into Deep Learning, LLMs, NLP, Python, or building systems like RAG and search, you’ll feel at home here."
+  },
+  {
+    "objectID": "about.html#what-i-do-right-now",
+    "href": "about.html#what-i-do-right-now",
+    "title": "Siddhant's Blog",
+    "section": "What I do right now",
+    "text": "What I do right now\nI currently work as a Machine Learning Engineer at OMEGA Labs, where I focus on LLM evaluation and incentive design in a decentralized AI setting. A big part of my work is building evaluation pipelines, finding issues in existing scoring, and designing mechanisms that reward genuinely better models — not just “good-looking metrics.”"
+  },
+  {
+    "objectID": "about.html#my-background-and-how-i-got-here",
+    "href": "about.html#my-background-and-how-i-got-here",
+    "title": "Siddhant's Blog",
+    "section": "My background (and how I got here)",
+    "text": "My background (and how I got here)\nOver the past 3+ years, I’ve worked deeply in the Document AI space — building and scaling pipelines that extract, structure, and validate information from messy, real-world documents.\nPreviously, I was a Data Scientist II at Wolters Kluwer (Jun 2023 – Jun 2025), where I worked across multiple products and problem types, including:\n\nRAG + search systems: Built a hybrid approach combining historical user queries with rule-based results to improve search relevance.\nInformation extraction from PDFs: Integrated AWS Textract and later added LLM-based structured extraction (few-shot + structured outputs), with a workflow that made onboarding faster and more configurable for operations teams.\nRule clustering & reuse: Found redundancy in large rule sets, clustered similar rules (with GPT-4o-assisted logic), and built a search workbench on Azure AI Search to help users navigate and reuse them.\nDocument classification: Added page-level classification using DONUT to reduce manual work across multi-state form variations.\n\nI started even earlier as a Data Science Intern at Wolters Kluwer (Jul 2022 – May 2023), and also worked as a Data Science Intern at Mowito, where I explored object detection approaches on SKU/image datasets."
+  },
+  {
+    "objectID": "about.html#before-ai-robotics-and-computer-vision",
+    "href": "about.html#before-ai-robotics-and-computer-vision",
+    "title": "Siddhant's Blog",
+    "section": "Before AI: robotics and computer vision 🤖",
+    "text": "Before AI: robotics and computer vision 🤖\nBefore I went all-in on LLMs and DocAI, I was deep into robotics — building, experimenting, and learning through hands-on projects. That naturally pulled me into computer vision, where I worked with both classical techniques (OpenCV, edge detection, Hough transforms) and deep learning models like YOLO.\nI’ve also built projects like an image caption generator, mask detection, a sign-detection robot, and explored ideas like variational autoencoders for representation learning."
+  },
+  {
+    "objectID": "about.html#what-im-learning-these-days",
+    "href": "about.html#what-im-learning-these-days",
+    "title": "Siddhant's Blog",
+    "section": "What I’m learning these days",
+    "text": "What I’m learning these days\nRight now, I’m focused on going deeper into:\n\nTransformers & LLM architecture (not just using them — understanding them)\nEvaluation (what metrics lie, what signals matter, how to stress-test systems)\nRAG & smart search in real products (latency, observability, failure modes, cost)\nKaggle competitions to stay sharp and hands-on"
+  },
+  {
+    "objectID": "about.html#my-toolkit",
+    "href": "about.html#my-toolkit",
+    "title": "Siddhant's Blog",
+    "section": "My toolkit",
+    "text": "My toolkit\nI work mostly in Python, and I’m comfortable taking projects from experimentation → pipelines → deployment.\nSome tools I regularly use: PyTorch, Hugging Face Transformers, LangChain, FastAPI/Django, Docker, SQL, Azure AI Search / Azure Doc Intelligence, AWS Textract, vector DBs (e.g., ChromaDB), and MLOps tooling like MLflow / Weights & Biases."
+  },
+  {
+    "objectID": "about.html#a-few-highlights-for-quick-context",
+    "href": "about.html#a-few-highlights-for-quick-context",
+    "title": "Siddhant's Blog",
+    "section": "A few highlights (for quick context)",
+    "text": "A few highlights (for quick context)\n\nB.Tech (ECE), IIIT Pune — May 2023\n2nd place — DOXA AI Hackathon (Mar 2025)\n2nd place — ROS Hackathon (IRC, Jul 2021)\nMentorship under RigBetel Labs + founded the Robotics Club at IIIT Pune"
+  },
+  {
+    "objectID": "about.html#lets-connect",
+    "href": "about.html#lets-connect",
+    "title": "Siddhant's Blog",
+    "section": "Let’s connect",
+    "text": "Let’s connect\nIf you’re curious about NLP, LLMs, Document Intelligence, RAG, or building scalable AI systems, I’d love to connect.\n\n📩 Email: siddhantoon@gmail.com\n🔗 You can also find my GitHub / LinkedIn via the links on this site.\n\n\nFreelance / consulting\nI’m available for freelance or consulting in:\n\nDocument Intelligence (extraction, classification, validation)\nRAG + search systems (retrieval, evaluation, production readiness)\nML engineering (pipelines, deployment, experimentation workflows)\n\n\n\nKaggle / hackathons\nIf you’re up for teaming on Kaggle or hackathons, ping me — always down to learn together 🚀"
+  },
+  {
+    "objectID": "posts/the-loss-that-learned-everything/index.html",
+    "href": "posts/the-loss-that-learned-everything/index.html",
+    "title": "The Loss That Learned Everything",
+    "section": "",
+    "text": "Redirecting to the full article…\nIf you are not redirected automatically, click here to read the article."
   }
 ]
