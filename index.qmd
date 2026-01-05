@@ -1,0 +1,52 @@
+---
+title: ""
+page-layout: full
+title-block-banner: false
+listing:
+  - id: recent-posts
+    contents: posts
+    sort: "date desc"
+    max-items: 3
+    type: default
+    fields: [title, date, description]
+---
+
+<img src="my.jpg" class="profile-photo" alt="Siddhant">
+
+Hi, I'm **Siddhant** 👋
+
+This blog is my space to *learn in public* — to share what I discover and connect with others on a similar path.
+If you're into (or wanna get into) **Deep Learning**, **LLMs**, or **Python**, you're in the right place.
+
+I currently work as a **Data Scientist-II** at **Wolters Kluwer**. Over the past 3 years, I've been building and scaling intelligent pipelines in the **Document AI** space — processing unstructured documents. Recently, building systems around **Retrieval-Augmented Generation (RAG)** and smart search.
+
+On the side, I've freelanced as a **Python dev** and **AI engineer** — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.
+
+Before AI fever, I was deep into **robotics** 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into **computer vision**, where I worked with both classical algorithms and deep nn models like **YOLO**, **ResNets**, and **GANs**.
+
+These days, I'm focused on learning **transformers** and **LLM architectures** in depth. Alongside, exploring **Kaggle competitions** to stay hands-on and push my thinking through experimentation.
+
+---
+
+If you're curious about **NLP**, **LLMs**, **document intelligence**, or building **scalable AI systems** — I'd love to connect.
+
+👉 Available for **freelance or consulting** in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.
+
+🚀 Up for teaming on **Kaggle or hackathons**? Ping me on Discord — always down to learn together.
+
+---
+
+### Blogs
+
+
+
+
+
+::: {#recent-posts}
+:::
+
+::: {.show-more-container}
+[Show More →](blog.qmd){.show-more-btn}
+:::
+
+

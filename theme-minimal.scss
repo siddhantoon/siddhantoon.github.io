@@ -1,0 +1,258 @@
+/*-- scss:defaults --*/
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap");
+// ===== BOOTSTRAP CONTAINER WIDTHS =====
+// Increase page width for better readability
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1100px,
+  xxl: 1200px
+);
+
+// ===== NAVBAR =====
+$navbar-bg: #25679f;
+$navbar-fg: rgba(255, 255, 255, 0.95);
+$navbar-hl: rgba(255, 255, 255, 1);
+
+// ===== TYPOGRAPHY =====
+$font-size-root: 19px;
+$line-height-base: 1.5;
+
+// ===== FONT WEIGHT OPTIONS =====
+$font-weight-base: 375;
+
+// ===== BODY TEXT COLOR OPTIONS =====
+$body-color: #111111;
+
+// ===== FONT FAMILY =====
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+
+// Monospace fonts for code
+$font-family-monospace: 'SF Mono', 'Cascadia Code', Menlo, Monaco, 'Courier New', monospace;
+
+// ===== HEADINGS =====
+$headings-color: #333333;  // Dark color for all headings (not primary/navbar blue)
+$headings-font-weight: 400;  // Bold - valid values: 700 (bold), 800 (extra bold), 900 (black)
+$headings-line-height: 1.2;
+$headings-margin-bottom: 0.5rem;  // Minimal space after headings
+
+// ===== CODE =====
+$code-block-border-left: false;
+
+// ===== LAYOUT =====
+$content-padding-top: 0;
+
+/*-- scss:rules --*/
+
+// ===== FONT RENDERING =====
+// Improve font smoothing and rendering
+body {
+  font-family: $font-family-sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// ===== HEADINGS =====
+// Shift all headings slightly to the left and set weight
+h1, h2, h3, h4, h5, h6 {
+  margin-left: -0.1em;
+  font-weight: 700;  // Bold (change to 800 or 900 for bolder)
+}
+
+// Remove default Quarto underline on h2
+h2, h3, h4, h5, h6 {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+// ===== NAVBAR =====
+// Reduce navbar menu text size
+.navbar-nav .nav-link,
+.navbar-nav .menu-text {
+  font-size: 0.9rem;  // Adjust this (try 0.85rem, 0.9rem, or 0.95rem)
+}
+
+// Align everything in navbar to baseline
+.navbar.navbar-expand-lg,
+.navbar.navbar-expand-lg > *,
+.navbar-collapse,
+.navbar-brand,
+.navbar-nav {
+  display: flex;
+  align-items: baseline;
+}
+
+.navbar-nav .nav-link {
+  display: flex;
+  align-items: baseline;
+}
+
+// Align icons with text
+.navbar-nav .nav-link i,
+.navbar-nav .nav-link .bi {
+  vertical-align: baseline;
+}
+
+// ===== INDIVIDUAL ICON CONTROL =====
+// Customize each icon and text link individually
+
+// ===== VERTICAL POSITION CONTROL =====
+// Fine-tune vertical alignment with transform
+
+// Adjust About link position
+// .navbar-nav a[href*="about"] .menu-text {
+//   transform: translateY(1px);  // Move down (negative = up)
+// }
+
+// Adjust Blog link position
+// .navbar-nav a[href*="blog"] .menu-text {
+//   transform: translateY(1px);
+// }
+
+// Adjust Resume link position
+// .navbar-nav a[href*="pdf"] .menu-text {
+//   transform: translateY(1px);
+//   font-weight: 600;  // Make resume bold
+// }
+
+// Adjust icon positions
+// .bi-search { transform: translateY(-3px); }
+.bi-envelope { transform: translateY(2px); }
+.bi-github { transform: translateY(1px); }
+.bi-linkedin { transform: translateY(1px); }
+.bi-twitter-x { transform: translateY(1px); }
+.bi-rss { transform: translateY(1px); }
+.fab.fa-discord { transform: translateY(0px); }
+.fab.fa-kaggle { transform: translateY(0px); }
+
+// Or adjust all icons at once
+// .navbar-nav i,
+// .navbar-nav .bi,
+// .navbar-nav .fab {
+//   transform: translateY(2px);  // Move all icons down by 2px
+// }
+
+// ===== SIZE & STYLE CONTROL =====
+// Text links by href
+// .navbar-nav a[href*="about"] .menu-text {
+//   font-size: 0.9rem;
+// }
+
+// .navbar-nav a[href*="blog"] .menu-text {
+//   font-size: 0.9rem;
+// }
+
+// .navbar-nav a[href*="pdf"] .menu-text,
+// .navbar-nav a[href*="Resume"] .menu-text {
+//   font-size: 0.9rem;
+//   font-weight: 600;  // Make resume bold
+// }
+
+// Icons
+
+// Email icon
+// .bi-envelope {
+//   font-size: 1rem;
+//   color: inherit;
+// }
+
+// GitHub icon
+// .bi-github {
+//   font-size: 1rem;
+// }
+
+// LinkedIn icon
+// .bi-linkedin {
+//   font-size: 1rem;
+// }
+
+// Twitter/X icon
+// .bi-twitter-x {
+//   font-size: 1rem;
+// }
+
+// RSS icon
+// .bi-rss {
+//   font-size: 1rem;
+// }
+
+// Discord icon (Font Awesome)
+// .fab.fa-discord {
+//   font-size: 1rem;
+// }
+
+// Kaggle icon (Font Awesome)
+// .fab.fa-kaggle {
+//   font-size: 1rem;
+// }
+
+// Or control all icons at once
+// .navbar-nav i,
+// .navbar-nav .bi,
+// .navbar-nav .fab {
+//   font-size: 0.95rem;  // Adjust size
+//   opacity: 0.9;         // Adjust opacity
+// }
+
+// ===== LISTS =====
+// Reduce left indent and spacing
+ul, ol {
+  // margin-top: 0.5rem;  // Match heading margin-bottom for consistency
+  // margin-bottom: 1rem;
+  padding-left: 1.25rem;  // Less indent from left
+}
+
+li {
+  // margin-bottom: 0.25rem;
+  padding-left: 0rem;
+}
+
+// Make spacing after headings consistent
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p{
+  margin-top: 0.3rem;  // Same as list margin-top
+}
+
+// ===== PROFILE PHOTO =====
+.profile-photo {
+  float: right;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 0 0 0.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// ===== BLOG LISTING =====
+// Customize blog list page appearance
+.quarto-listing-default .listing-title,
+.quarto-listing-default .listing-title a {
+  font-weight: 700;  // Make blog titles bold
+  font-size: 1.2rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.quarto-listing-default .listing-description {
+  color: #666666;  // Different color for preview text
+  font-size: 0.95rem;  // Smaller size
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.quarto-listing-default .listing-date {
+  color: #636363;
+  font-size: 0.9rem;
+}
+
+// ===== MOBILE RESPONSIVE =====
+@media (max-width: 768px) {
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+    margin-left: 1rem;
+  }
+}

@@ -1,0 +1,39 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Siddhant's Blog"
+  description: ""
+  site-url: https://siddhantoon.github.io/
+  navbar:
+    left:
+      - text: "About"
+        href: about.qmd
+      - text: "Blog"
+        href: blog.qmd
+    right:
+      - icon: twitter-x
+        href: https://x.com/siddhantoon
+      - icon: linkedin
+        href: https://linkedin.com/in/siddhantoon
+      - text: "<i class='fab fa-kaggle'></i>"
+        href: https://kaggle.com/siddhantoon
+      - icon: github
+        href: https://github.com/siddhantoon
+      # - text: "Resume"
+      #   href: Sidddhant.pdf
+      - text: "<i class='fab fa-discord'></i>"
+        href: https://discord.com/users/siddhuji
+      - icon: envelope
+        href: mailto:siddhantoon@gmail.com
+      - icon: rss
+        href: index.xml
+format:
+  html:
+    theme:
+      - theme-minimal.scss
+    smooth-scroll: true
+    include-in-header:
+      - text: |
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

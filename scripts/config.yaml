@@ -1,0 +1,7 @@
+# Configuration for blog publishing system
+
+# Path to your Obsidian vault
+vault_path: "path/to/your/obsidian/vault"
+
+# Name of the attachments folder in Obsidian
+attachments_folder: "attachments"

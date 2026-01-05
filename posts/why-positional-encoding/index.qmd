@@ -1,0 +1,160 @@
+---
+title: "what/why/how positional encodings?"
+date: "2025-11-29"
+toc: true
+toc-depth: 4
+toc-expand: true
+---
+
+## why positional encodings?
+
+Because we are working with sequential data and a parallel model. We need to have some representation of the position of items in a sequence. Text is sequential, position matters simply. Model is parallel - transformers architecture has no clue that different tokens are far or close to one another, all tokens are same to this model. Unlike RNN family where processing was sequential so position was encoded in the way we processed. So we need the model to know that there is positions of different tokens involved here which is needed to understand the patterns.
+
+## absolute
+The very simple thing you can think of is using the absolute position embeddings - doing something like this is position 1,2,3,... convert it to embedding or encode it with the tokens somehow.
+This is the approach used in BERT 
+- this works but how do you scale - you have learned embeddings for upto some length which the model learned - but this is not generalized. Even theoretically you cannot scale it because these are learned embeddings
+- No relative distance - position 50 is a unique thing, 51 is a unique thing. This doesn't tell the model that 51 is adjacent to 50.
+
+## sinusoidal 
+even in the OG "Attention" paper they used the Sinusoidal encodings
+
+### what/why?
+
+- We are using Sin wave to encode the position Sin(ωt) where t is position, something like Sin(ω* 1), Sin(ω* 2), Sin(ω* 3),....Sin(ω* t) -> this creates like a wave pattern, each position gets a different value, depending on ω we may get repeat values. So even ω is different for each dimension of a token.
+- This is directly added to the token embedding
+- Nearby embeddings will have similar values - 10 & 11 position vectors are less different that 10 and 50. Giving some idea about the position
+- We can extrapolate it to any amount of length or position... at least in theory
+
+### how/implementation?
+
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124004425.png)
+We have an alternating Sin Cos waves with varying ω or speed of change
+- dimensions with low ω -> less change with each position -> they can store positional differences of longer sequences
+- dimensions with high ω -> high change with each position -> they can store positional differences of longer sequences
+Initial dim ω is high, later ω is smaller
+Okay so how do we code it?
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124005853.png)
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124005940.png)
+
+### vectorized is good
+
+Before coming to code, we use a different formula for the `divterm` we take `sin` and `cos` of this term
+
+
+$$
+\text{divterm}= \frac{1}{10000^{\frac{2k}{d}}} \\
+$$
+$$
+\text{divterm}= e^{\frac{-2k}{d}log(10000)}
+$$
+
+**Why this form??** 
+- it's easier/faster to vectorize. 
+- Vectorized computations are way faster
+- do `torch.arange` for k and the rest is constant.
+**Why faster??** - I went to find it's answer & you should too, it's really interesting. Also search for why exactly vectorization is faster than loops on a GPU. How it launches kernels n stuff.
+
+So below is the code, freaking few lines of code but needs a lot of understanding - 
+```python
+T,C = 10, 32 # Time steps, Channels
+
+pos = torch.arange(T, dtype=torch.float32).view(T, 1)
+
+divterm = torch.exp(torch.arange(0, C, 2, dtype=torch.float32) * -(torch.log(torch.tensor(10000.0)) / C)).unsqueeze(0)
+
+# (pos@divterm).shape
+
+pe = torch.zeros(T, C)
+
+pe[:, 0::2] = torch.sin(pos @ divterm)
+
+pe[:, 1::2] = torch.cos(pos @ divterm)
+```
+
+### why not sinusoidal?
+
+- When tested, these did not work really well in extrapolation.
+
+## Rotary Positional Encoding RoPE
+When people started experimenting with new positional encodings, this paper was published in 2021, 
+it took inspiration from the original sinusoidal encodings, with a different form & approach 
+
+### what/why?
+
+- The idea is to take the vector of a token, simply rotate it
+- if the position is 2 rotate it with $2.\theta$, if position is 3 rotate it by $3.\theta$ 
+- Sounds simple, this should be sufficient to encode the positional information, as we are rotating the vector according to it's info
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125144640.png)
+- this is applied to the `query` and `key` of token embeddings inside attention before calculation of the self-attention weights in every attention block
+- not to the initial token embeddings once as done in the OG attention paper
+
+### how/implementation?
+
+The rotation matrix above is of 2D, but actually we have a lot more dimensions than 2.
+What we do is take a pair of dimensions and apply rotation to them, so a kind of rotation in higher dimension.
+this is block rotation matrix
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125195629.png)
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125195754.png)
+The $\theta$ varies as - same as the sinusoidal encodings,
+$$
+\theta_i = 10000^{-\frac{2k}{d}}
+$$
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251126160041.png)
+
+### code
+
+```python
+def get_rotary_embedding(dim, seq_len):
+    # Base: 10000 as used in original paper
+    inv_freq = 1.0 / (10000 ** (torch.arange(0, dim, 2).float() / dim)) # N^(-2i/d) where i = [0,1,2,..d/2]
+    # Create position indices
+    positions = torch.arange(seq_len).float() # This is going to act as n in n theta
+    # Outer product (pos × freq)
+    freqs = torch.outer(positions, inv_freq)  # (seq_len, dim // 2)
+    # sin and cos for rotation
+    # (seq_len, dim // 2) -> (seq_len, dim)
+    freqs = torch.repeat_interleave(freqs, 2, dim=-1)
+    sin = freqs.sin()  # (seq_len, dim)
+    cos = freqs.cos()  # (seq_len, dim)
+    return sin, cos
+
+def invert_twin(x):
+    """[1,2,3,4,5,6,] -> [-2, 1, -4, 3, -6, 5] for the last dim"""
+    x_odd = x[..., ::2]
+    x_even = x[..., 1::2]
+    return torch.stack((-x_even, x_odd), dim=-1).flatten(-2)
+
+def apply_rotary(q, k, sin, cos):
+    """
+    Args:
+        q: [BS, seq_len, dim]
+        k: [BS, seq_len, dim]
+        sin: [seq_len, dim]
+        cos: [seq_len, dim]
+    """
+    q = q*cos + invert_twin(q)*sin
+    k = k*cos + invert_twin(k)*sin
+    return q,k
+```
+### extrapolation?
+- this is applied on the query & keys not values, thus position encoded only in attention values. less overfitting to specific position values
+- this also works on the relative position not the absolute position of the tokens, and the distance between token matters.
+- evidence suggests it is better than sinusoidal encodings
+
+### how relative position?
+- so the rotation $\theta$ not just encode the position of that token, how it is applied actually tells us
+- that we're encoding the distance between two tokens. 
+- when the query and key embedding interact in self attention, their relative distance matters
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125163442.png)
+![](https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125163505.png)
+
+## conclusion
+
+this is most widely used way to encode positional info, there are ways to improve upon it
+
+topics i'll be exploring later -
+
+- Position Interpolation
+- YaRN
+- NTK-Aware scaling
