@@ -1,0 +1,191 @@
+[
+  {
+    "objectID": "PROJECT_SETUP.html",
+    "href": "PROJECT_SETUP.html",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Automated publishing system for converting Jupyter notebooks to Quarto blog posts with Obsidian sync.\n\n\n\n[Your Quarto Blog Location]\n├── blog/                    # Quarto site (GitHub Pages)\n│   ├── _quarto.yml\n│   ├── index.qmd\n│   ├── about.qmd\n│   └── posts/              # Published posts\n│       └── post-name/\n│           ├── index.qmd\n│           └── attachments/  # images, gifs, videos\n\n[Anywhere on your machine]\n└── my-notebook.ipynb       # Can be in any directory\n\n[Your Obsidian Vault Path - you'll provide]\n└── blog/                   # Synced blog posts (script creates this)\n    └── post-name.md\n\n\n\n\nWork in Jupyter notebooks anywhere on your machine\nClean up and restructure notebook manually when ready\nRun: python publish.py /path/to/my-notebook.ipynb\nReview changes, then commit and push\n\n\n\n\n\nInput: Accept absolute path to notebook (can be anywhere)\nConversion: Convert notebook to Quarto format (.qmd)\nNo re-execution: Use notebook outputs as-is (preserve all outputs)\nNo automatic cleanup: Publish notebook exactly as saved\nAsset handling: Copy images/gifs/videos to posts/post-name/attachments/\nObsidian sync: Create full markdown copy in {obsidian-vault}/blog/\nGit workflow: Prepare files, show changes for review, then commit/push\n\n\n\n\nThe script will need to know: - Path to your Quarto blog directory (e.g., C:\\Users\\Lenovo\\Siddhant-drive\\2025\\blog) - Path to your Obsidian vault (you’ll provide this)\n\n\n\nAdd metadata to notebook using YAML in a raw cell at the top:\n---\ntitle: \"My Post Title\"\ndate: \"2025-11-29\"\ncategories:\n  - machine-learning\n  - python\ndescription: \"Brief description of the post\"\n---\nMinimal required fields (to start): - title - date - categories (at least one)\n\n\n\n\nImages stored in: posts/post-name/attachments/\nReferenced as: attachments/image.png (relative path)\nQuarto will resolve these correctly when rendering\n\n\n\n\n\nFormat: Complete markdown\nIncludes: Text blocks, code blocks, attachment URLs\nLocation: {obsidian-vault}/blog/post-name.md\nShould be as close to the published post as possible\n\n\n\n\n\nRepository: TBD (will create)\nBranch: main or gh-pages (TBD)\nQuarto will render to _site/ directory\n\n\n\n\n\nCreate Quarto blog directory\nInitialize Quarto blog\nCreate GitHub repository\nSet up GitHub Pages\nCreate publish.py script with config\nTest with sample notebook\n\n\n\n\n\nNotebooks can live anywhere on the machine\nScript accepts full path to notebook\nObsidian vault path will be provided by you\nScript creates blog/ folder in Obsidian vault if it doesn’t exist\nKeep it minimal to start, iterate as needed"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#overview",
+    "href": "PROJECT_SETUP.html#overview",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Automated publishing system for converting Jupyter notebooks to Quarto blog posts with Obsidian sync."
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#folder-structure",
+    "href": "PROJECT_SETUP.html#folder-structure",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "[Your Quarto Blog Location]\n├── blog/                    # Quarto site (GitHub Pages)\n│   ├── _quarto.yml\n│   ├── index.qmd\n│   ├── about.qmd\n│   └── posts/              # Published posts\n│       └── post-name/\n│           ├── index.qmd\n│           └── attachments/  # images, gifs, videos\n\n[Anywhere on your machine]\n└── my-notebook.ipynb       # Can be in any directory\n\n[Your Obsidian Vault Path - you'll provide]\n└── blog/                   # Synced blog posts (script creates this)\n    └── post-name.md"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#workflow",
+    "href": "PROJECT_SETUP.html#workflow",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Work in Jupyter notebooks anywhere on your machine\nClean up and restructure notebook manually when ready\nRun: python publish.py /path/to/my-notebook.ipynb\nReview changes, then commit and push"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#publishing-script-behavior",
+    "href": "PROJECT_SETUP.html#publishing-script-behavior",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Input: Accept absolute path to notebook (can be anywhere)\nConversion: Convert notebook to Quarto format (.qmd)\nNo re-execution: Use notebook outputs as-is (preserve all outputs)\nNo automatic cleanup: Publish notebook exactly as saved\nAsset handling: Copy images/gifs/videos to posts/post-name/attachments/\nObsidian sync: Create full markdown copy in {obsidian-vault}/blog/\nGit workflow: Prepare files, show changes for review, then commit/push"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#configuration",
+    "href": "PROJECT_SETUP.html#configuration",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "The script will need to know: - Path to your Quarto blog directory (e.g., C:\\Users\\Lenovo\\Siddhant-drive\\2025\\blog) - Path to your Obsidian vault (you’ll provide this)"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#notebook-metadata-convention",
+    "href": "PROJECT_SETUP.html#notebook-metadata-convention",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Add metadata to notebook using YAML in a raw cell at the top:\n---\ntitle: \"My Post Title\"\ndate: \"2025-11-29\"\ncategories:\n  - machine-learning\n  - python\ndescription: \"Brief description of the post\"\n---\nMinimal required fields (to start): - title - date - categories (at least one)"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#imageasset-references",
+    "href": "PROJECT_SETUP.html#imageasset-references",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Images stored in: posts/post-name/attachments/\nReferenced as: attachments/image.png (relative path)\nQuarto will resolve these correctly when rendering"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#obsidian-copy",
+    "href": "PROJECT_SETUP.html#obsidian-copy",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Format: Complete markdown\nIncludes: Text blocks, code blocks, attachment URLs\nLocation: {obsidian-vault}/blog/post-name.md\nShould be as close to the published post as possible"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#github-pages-publishing",
+    "href": "PROJECT_SETUP.html#github-pages-publishing",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Repository: TBD (will create)\nBranch: main or gh-pages (TBD)\nQuarto will render to _site/ directory"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#current-status",
+    "href": "PROJECT_SETUP.html#current-status",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Create Quarto blog directory\nInitialize Quarto blog\nCreate GitHub repository\nSet up GitHub Pages\nCreate publish.py script with config\nTest with sample notebook"
+  },
+  {
+    "objectID": "PROJECT_SETUP.html#notes",
+    "href": "PROJECT_SETUP.html#notes",
+    "title": "Quarto Blog Publishing System - Project Setup",
+    "section": "",
+    "text": "Notebooks can live anywhere on the machine\nScript accepts full path to notebook\nObsidian vault path will be provided by you\nScript creates blog/ folder in Obsidian vault if it doesn’t exist\nKeep it minimal to start, iterate as needed"
+  },
+  {
+    "objectID": "plan.html",
+    "href": "plan.html",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "Create a streamlined system to publish blogs from Obsidian notes and Jupyter notebooks to a Quarto blog site, with one-click deployment to GitHub Pages.\n\n\n\n\nSource formats: Obsidian markdown notes, Jupyter notebooks\nTarget: Quarto blog site\nPublishing: GitHub Pages\nBehavior: Copy files (keep originals), error if slug exists\nMetadata: title, date\n\n\n\n\n\n\n\nCreate scripts/ directory\nCreate config.yaml with placeholders for:\n\nvault_path\nattachments_folder\nAny other settings\n\nSet up publish.py with CLI structure (using argparse)\n\n\n\n\n\nRead Obsidian markdown file\nExtract title (from filename or first # Heading)\nFind all image references:\n\n![[image.png]] (Obsidian format)\n![alt](attachments/image.png) (Standard markdown)\n![alt](../attachments/image.png) (Relative paths)\n\nCreate posts/&lt;slug&gt;/ directory (error if exists)\nCopy images to post directory\nConvert image references to ![alt](image.png)\nGenerate front matter (title, date)\nWrite posts/&lt;slug&gt;/index.qmd\n\n\n\n\n\nCopy .ipynb to posts/&lt;slug&gt;/\nAdd front matter (Quarto handles notebooks natively)\nHandle external images if any\n\n\n\n\n\nWrapper around quarto publish gh-pages\n\n\n\n\n\n# Convert Obsidian note to Quarto post\npython scripts/publish.py obsidian &lt;note-path&gt; --slug &lt;post-slug&gt;\n\n# Convert Jupyter notebook to Quarto post\npython scripts/publish.py notebook &lt;notebook-path&gt; --slug &lt;post-slug&gt;\n\n# Publish to GitHub Pages\npython scripts/publish.py deploy\n\n\n\n# config.yaml\nvault_path: \"path/to/obsidian/vault\"\nattachments_folder: \"attachments\"  # or whatever folder name is used\n\n\n\n\nFor Jupyter: Use Quarto’s native .ipynb support\nFor Obsidian: Custom conversion handling image attachments\nMetadata convention: title (from filename/H1), date (today’s date)"
+  },
+  {
+    "objectID": "plan.html#overview",
+    "href": "plan.html#overview",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "Create a streamlined system to publish blogs from Obsidian notes and Jupyter notebooks to a Quarto blog site, with one-click deployment to GitHub Pages."
+  },
+  {
+    "objectID": "plan.html#requirements",
+    "href": "plan.html#requirements",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "Source formats: Obsidian markdown notes, Jupyter notebooks\nTarget: Quarto blog site\nPublishing: GitHub Pages\nBehavior: Copy files (keep originals), error if slug exists\nMetadata: title, date"
+  },
+  {
+    "objectID": "plan.html#implementation-plan",
+    "href": "plan.html#implementation-plan",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "Create scripts/ directory\nCreate config.yaml with placeholders for:\n\nvault_path\nattachments_folder\nAny other settings\n\nSet up publish.py with CLI structure (using argparse)\n\n\n\n\n\nRead Obsidian markdown file\nExtract title (from filename or first # Heading)\nFind all image references:\n\n![[image.png]] (Obsidian format)\n![alt](attachments/image.png) (Standard markdown)\n![alt](../attachments/image.png) (Relative paths)\n\nCreate posts/&lt;slug&gt;/ directory (error if exists)\nCopy images to post directory\nConvert image references to ![alt](image.png)\nGenerate front matter (title, date)\nWrite posts/&lt;slug&gt;/index.qmd\n\n\n\n\n\nCopy .ipynb to posts/&lt;slug&gt;/\nAdd front matter (Quarto handles notebooks natively)\nHandle external images if any\n\n\n\n\n\nWrapper around quarto publish gh-pages"
+  },
+  {
+    "objectID": "plan.html#cli-commands",
+    "href": "plan.html#cli-commands",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "# Convert Obsidian note to Quarto post\npython scripts/publish.py obsidian &lt;note-path&gt; --slug &lt;post-slug&gt;\n\n# Convert Jupyter notebook to Quarto post\npython scripts/publish.py notebook &lt;notebook-path&gt; --slug &lt;post-slug&gt;\n\n# Publish to GitHub Pages\npython scripts/publish.py deploy"
+  },
+  {
+    "objectID": "plan.html#configuration-structure",
+    "href": "plan.html#configuration-structure",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "# config.yaml\nvault_path: \"path/to/obsidian/vault\"\nattachments_folder: \"attachments\"  # or whatever folder name is used"
+  },
+  {
+    "objectID": "plan.html#notes",
+    "href": "plan.html#notes",
+    "title": "Blog Publishing System - Implementation Plan",
+    "section": "",
+    "text": "For Jupyter: Use Quarto’s native .ipynb support\nFor Obsidian: Custom conversion handling image attachments\nMetadata convention: title (from filename/H1), date (today’s date)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Siddhant's Blog",
+    "section": "",
+    "text": "(Content coming soon)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Siddhant's Blog",
+    "section": "",
+    "text": "Hi, I’m Siddhant 👋\nThis blog is my space to learn in public — to share what I discover and connect with others on a similar path. If you’re into (or wanna get into) Deep Learning, LLMs, or Python, you’re in the right place.\nI currently work as a Data Scientist-II at Wolters Kluwer. Over the past 3 years, I’ve been building and scaling intelligent pipelines in the Document AI space — processing unstructured documents. Recently, building systems around Retrieval-Augmented Generation (RAG) and smart search.\nOn the side, I’ve freelanced as a Python dev and AI engineer — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.\nBefore AI fever, I was deep into robotics 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into computer vision, where I worked with both classical algorithms and deep nn models like YOLO, ResNets, and GANs.\nThese days, I’m focused on learning transformers and LLM architectures in depth. Alongside, exploring Kaggle competitions to stay hands-on and push my thinking through experimentation.\n\nIf you’re curious about NLP, LLMs, document intelligence, or building scalable AI systems — I’d love to connect.\n👉 Available for freelance or consulting in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.\n🚀 Up for teaming on Kaggle or hackathons? Ping me on Discord — always down to learn together.\n\n\nBlogs\n\n\n\n\n\nwhat/why/how positional encodings?\n\n\n\n\n\n\n\n\nNov 29, 2025\n\n\n\n\n\nNo matching items\n\n\nShow More →"
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html",
+    "href": "posts/why-positional-encoding/index.html",
+    "title": "what/why/how positional encodings?",
+    "section": "",
+    "text": "Because we are working with sequential data and a parallel model. We need to have some representation of the position of items in a sequence. Text is sequential, position matters simply. Model is parallel - transformers architecture has no clue that different tokens are far or close to one another, all tokens are same to this model. Unlike RNN family where processing was sequential so position was encoded in the way we processed. So we need the model to know that there is positions of different tokens involved here which is needed to understand the patterns."
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html#why-positional-encodings",
+    "href": "posts/why-positional-encoding/index.html#why-positional-encodings",
+    "title": "what/why/how positional encodings?",
+    "section": "",
+    "text": "Because we are working with sequential data and a parallel model. We need to have some representation of the position of items in a sequence. Text is sequential, position matters simply. Model is parallel - transformers architecture has no clue that different tokens are far or close to one another, all tokens are same to this model. Unlike RNN family where processing was sequential so position was encoded in the way we processed. So we need the model to know that there is positions of different tokens involved here which is needed to understand the patterns."
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html#absolute",
+    "href": "posts/why-positional-encoding/index.html#absolute",
+    "title": "what/why/how positional encodings?",
+    "section": "absolute",
+    "text": "absolute\nThe very simple thing you can think of is using the absolute position embeddings - doing something like this is position 1,2,3,… convert it to embedding or encode it with the tokens somehow. This is the approach used in BERT - this works but how do you scale - you have learned embeddings for upto some length which the model learned - but this is not generalized. Even theoretically you cannot scale it because these are learned embeddings - No relative distance - position 50 is a unique thing, 51 is a unique thing. This doesn’t tell the model that 51 is adjacent to 50."
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html#sinusoidal",
+    "href": "posts/why-positional-encoding/index.html#sinusoidal",
+    "title": "what/why/how positional encodings?",
+    "section": "sinusoidal",
+    "text": "sinusoidal\neven in the OG “Attention” paper they used the Sinusoidal encodings\n\nwhat/why?\n\nWe are using Sin wave to encode the position Sin(ωt) where t is position, something like Sin(ω* 1), Sin(ω* 2), Sin(ω* 3),….Sin(ω* t) -&gt; this creates like a wave pattern, each position gets a different value, depending on ω we may get repeat values. So even ω is different for each dimension of a token.\nThis is directly added to the token embedding\nNearby embeddings will have similar values - 10 & 11 position vectors are less different that 10 and 50. Giving some idea about the position\nWe can extrapolate it to any amount of length or position… at least in theory\n\n\n\nhow/implementation?\n We have an alternating Sin Cos waves with varying ω or speed of change - dimensions with low ω -&gt; less change with each position -&gt; they can store positional differences of longer sequences - dimensions with high ω -&gt; high change with each position -&gt; they can store positional differences of longer sequences Initial dim ω is high, later ω is smaller Okay so how do we code it?  \n\n\nvectorized is good\nBefore coming to code, we use a different formula for the divterm we take sin and cos of this term\n\\[\n\\text{divterm}= \\frac{1}{10000^{\\frac{2k}{d}}} \\\\\n\\] \\[\n\\text{divterm}= e^{\\frac{-2k}{d}log(10000)}\n\\]\nWhy this form?? - it’s easier/faster to vectorize. - Vectorized computations are way faster - do torch.arange for k and the rest is constant. Why faster?? - I went to find it’s answer & you should too, it’s really interesting. Also search for why exactly vectorization is faster than loops on a GPU. How it launches kernels n stuff.\nSo below is the code, freaking few lines of code but needs a lot of understanding -\nT,C = 10, 32 # Time steps, Channels\n\npos = torch.arange(T, dtype=torch.float32).view(T, 1)\n\ndivterm = torch.exp(torch.arange(0, C, 2, dtype=torch.float32) * -(torch.log(torch.tensor(10000.0)) / C)).unsqueeze(0)\n\n# (pos@divterm).shape\n\npe = torch.zeros(T, C)\n\npe[:, 0::2] = torch.sin(pos @ divterm)\n\npe[:, 1::2] = torch.cos(pos @ divterm)\n\n\nwhy not sinusoidal?\n\nWhen tested, these did not work really well in extrapolation."
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html#rotary-positional-encoding-rope",
+    "href": "posts/why-positional-encoding/index.html#rotary-positional-encoding-rope",
+    "title": "what/why/how positional encodings?",
+    "section": "Rotary Positional Encoding RoPE",
+    "text": "Rotary Positional Encoding RoPE\nWhen people started experimenting with new positional encodings, this paper was published in 2021, it took inspiration from the original sinusoidal encodings, with a different form & approach\n\nwhat/why?\n\nThe idea is to take the vector of a token, simply rotate it\nif the position is 2 rotate it with \\(2.\\theta\\), if position is 3 rotate it by \\(3.\\theta\\)\nSounds simple, this should be sufficient to encode the positional information, as we are rotating the vector according to it’s info \nthis is applied to the query and key of token embeddings inside attention before calculation of the self-attention weights in every attention block\nnot to the initial token embeddings once as done in the OG attention paper\n\n\n\nhow/implementation?\nThe rotation matrix above is of 2D, but actually we have a lot more dimensions than 2. What we do is take a pair of dimensions and apply rotation to them, so a kind of rotation in higher dimension. this is block rotation matrix   The \\(\\theta\\) varies as - same as the sinusoidal encodings, \\[\n\\theta_i = 10000^{-\\frac{2k}{d}}\n\\] \n\n\ncode\ndef get_rotary_embedding(dim, seq_len):\n    # Base: 10000 as used in original paper\n    inv_freq = 1.0 / (10000 ** (torch.arange(0, dim, 2).float() / dim)) # N^(-2i/d) where i = [0,1,2,..d/2]\n    # Create position indices\n    positions = torch.arange(seq_len).float() # This is going to act as n in n theta\n    # Outer product (pos × freq)\n    freqs = torch.outer(positions, inv_freq)  # (seq_len, dim // 2)\n    # sin and cos for rotation\n    # (seq_len, dim // 2) -&gt; (seq_len, dim)\n    freqs = torch.repeat_interleave(freqs, 2, dim=-1)\n    sin = freqs.sin()  # (seq_len, dim)\n    cos = freqs.cos()  # (seq_len, dim)\n    return sin, cos\n\ndef invert_twin(x):\n    \"\"\"[1,2,3,4,5,6,] -&gt; [-2, 1, -4, 3, -6, 5] for the last dim\"\"\"\n    x_odd = x[..., ::2]\n    x_even = x[..., 1::2]\n    return torch.stack((-x_even, x_odd), dim=-1).flatten(-2)\n\ndef apply_rotary(q, k, sin, cos):\n    \"\"\"\n    Args:\n        q: [BS, seq_len, dim]\n        k: [BS, seq_len, dim]\n        sin: [seq_len, dim]\n        cos: [seq_len, dim]\n    \"\"\"\n    q = q*cos + invert_twin(q)*sin\n    k = k*cos + invert_twin(k)*sin\n    return q,k\n\n\nextrapolation?\n\nthis is applied on the query & keys not values, thus position encoded only in attention values. less overfitting to specific position values\nthis also works on the relative position not the absolute position of the tokens, and the distance between token matters.\nevidence suggests it is better than sinusoidal encodings\n\n\n\nhow relative position?\n\nso the rotation \\(\\theta\\) not just encode the position of that token, how it is applied actually tells us\nthat we’re encoding the distance between two tokens.\nwhen the query and key embedding interact in self attention, their relative distance matters"
+  },
+  {
+    "objectID": "posts/why-positional-encoding/index.html#conclusion",
+    "href": "posts/why-positional-encoding/index.html#conclusion",
+    "title": "what/why/how positional encodings?",
+    "section": "conclusion",
+    "text": "conclusion\nthis is most widely used way to encode positional info, there are ways to improve upon it\ntopics i’ll be exploring later -\n\nPosition Interpolation\nYaRN\nNTK-Aware scaling"
+  }
+]

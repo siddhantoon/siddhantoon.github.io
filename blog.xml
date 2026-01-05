@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Siddhant&#39;s Blog</title>
+<link>https://siddhantoon.github.io/blog.html</link>
+<atom:link href="https://siddhantoon.github.io/blog.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.8.26</generator>
+<lastBuildDate>Fri, 28 Nov 2025 18:30:00 GMT</lastBuildDate>
+<item>
+  <title>what/why/how positional encodings?</title>
+  <link>https://siddhantoon.github.io/posts/why-positional-encoding/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="why-positional-encodings" class="level2">
+<h2 class="anchored" data-anchor-id="why-positional-encodings">why positional encodings?</h2>
+<p>Because we are working with sequential data and a parallel model. We need to have some representation of the position of items in a sequence. Text is sequential, position matters simply. Model is parallel - transformers architecture has no clue that different tokens are far or close to one another, all tokens are same to this model. Unlike RNN family where processing was sequential so position was encoded in the way we processed. So we need the model to know that there is positions of different tokens involved here which is needed to understand the patterns.</p>
+</section>
+<section id="absolute" class="level2">
+<h2 class="anchored" data-anchor-id="absolute">absolute</h2>
+<p>The very simple thing you can think of is using the absolute position embeddings - doing something like this is position 1,2,3,… convert it to embedding or encode it with the tokens somehow. This is the approach used in BERT - this works but how do you scale - you have learned embeddings for upto some length which the model learned - but this is not generalized. Even theoretically you cannot scale it because these are learned embeddings - No relative distance - position 50 is a unique thing, 51 is a unique thing. This doesn’t tell the model that 51 is adjacent to 50.</p>
+</section>
+<section id="sinusoidal" class="level2">
+<h2 class="anchored" data-anchor-id="sinusoidal">sinusoidal</h2>
+<p>even in the OG “Attention” paper they used the Sinusoidal encodings</p>
+<section id="whatwhy" class="level3">
+<h3 class="anchored" data-anchor-id="whatwhy">what/why?</h3>
+<ul>
+<li>We are using Sin wave to encode the position Sin(ωt) where t is position, something like Sin(ω* 1), Sin(ω* 2), Sin(ω* 3),….Sin(ω* t) -&gt; this creates like a wave pattern, each position gets a different value, depending on ω we may get repeat values. So even ω is different for each dimension of a token.</li>
+<li>This is directly added to the token embedding</li>
+<li>Nearby embeddings will have similar values - 10 &amp; 11 position vectors are less different that 10 and 50. Giving some idea about the position</li>
+<li>We can extrapolate it to any amount of length or position… at least in theory</li>
+</ul>
+</section>
+<section id="howimplementation" class="level3">
+<h3 class="anchored" data-anchor-id="howimplementation">how/implementation?</h3>
+<p><img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124004425.png" class="img-fluid"> We have an alternating Sin Cos waves with varying ω or speed of change - dimensions with low ω -&gt; less change with each position -&gt; they can store positional differences of longer sequences - dimensions with high ω -&gt; high change with each position -&gt; they can store positional differences of longer sequences Initial dim ω is high, later ω is smaller Okay so how do we code it? <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124005853.png" class="img-fluid"> <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251124005940.png" class="img-fluid"></p>
+</section>
+<section id="vectorized-is-good" class="level3">
+<h3 class="anchored" data-anchor-id="vectorized-is-good">vectorized is good</h3>
+<p>Before coming to code, we use a different formula for the <code>divterm</code> we take <code>sin</code> and <code>cos</code> of this term</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7Bdivterm%7D=%20%5Cfrac%7B1%7D%7B10000%5E%7B%5Cfrac%7B2k%7D%7Bd%7D%7D%7D%20%5C%5C%0A"> <img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7Bdivterm%7D=%20e%5E%7B%5Cfrac%7B-2k%7D%7Bd%7Dlog(10000)%7D%0A"></p>
+<p><strong>Why this form??</strong> - it’s easier/faster to vectorize. - Vectorized computations are way faster - do <code>torch.arange</code> for k and the rest is constant. <strong>Why faster??</strong> - I went to find it’s answer &amp; you should too, it’s really interesting. Also search for why exactly vectorization is faster than loops on a GPU. How it launches kernels n stuff.</p>
+<p>So below is the code, freaking few lines of code but needs a lot of understanding -</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1">T,C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Time steps, Channels</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3">pos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.arange(T, dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.float32).view(T, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb1-4"></span>
+<span id="cb1-5">divterm <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.exp(torch.arange(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, C, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.float32) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>(torch.log(torch.tensor(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000.0</span>)) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> C)).unsqueeze(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (pos@divterm).shape</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9">pe <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros(T, C)</span>
+<span id="cb1-10"></span>
+<span id="cb1-11">pe[:, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>::<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.sin(pos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> divterm)</span>
+<span id="cb1-12"></span>
+<span id="cb1-13">pe[:, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>::<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.cos(pos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> divterm)</span></code></pre></div></div>
+</section>
+<section id="why-not-sinusoidal" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-sinusoidal">why not sinusoidal?</h3>
+<ul>
+<li>When tested, these did not work really well in extrapolation.</li>
+</ul>
+</section>
+</section>
+<section id="rotary-positional-encoding-rope" class="level2">
+<h2 class="anchored" data-anchor-id="rotary-positional-encoding-rope">Rotary Positional Encoding RoPE</h2>
+<p>When people started experimenting with new positional encodings, this paper was published in 2021, it took inspiration from the original sinusoidal encodings, with a different form &amp; approach</p>
+<section id="whatwhy-1" class="level3">
+<h3 class="anchored" data-anchor-id="whatwhy-1">what/why?</h3>
+<ul>
+<li>The idea is to take the vector of a token, simply rotate it</li>
+<li>if the position is 2 rotate it with <img src="https://latex.codecogs.com/png.latex?2.%5Ctheta">, if position is 3 rotate it by <img src="https://latex.codecogs.com/png.latex?3.%5Ctheta"></li>
+<li>Sounds simple, this should be sufficient to encode the positional information, as we are rotating the vector according to it’s info <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125144640.png" class="img-fluid"></li>
+<li>this is applied to the <code>query</code> and <code>key</code> of token embeddings inside attention before calculation of the self-attention weights in every attention block</li>
+<li>not to the initial token embeddings once as done in the OG attention paper</li>
+</ul>
+</section>
+<section id="howimplementation-1" class="level3">
+<h3 class="anchored" data-anchor-id="howimplementation-1">how/implementation?</h3>
+<p>The rotation matrix above is of 2D, but actually we have a lot more dimensions than 2. What we do is take a pair of dimensions and apply rotation to them, so a kind of rotation in higher dimension. this is block rotation matrix <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125195629.png" class="img-fluid"> <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125195754.png" class="img-fluid"> The <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> varies as - same as the sinusoidal encodings, <img src="https://latex.codecogs.com/png.latex?%0A%5Ctheta_i%20=%2010000%5E%7B-%5Cfrac%7B2k%7D%7Bd%7D%7D%0A"> <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251126160041.png" class="img-fluid"></p>
+</section>
+<section id="code" class="level3">
+<h3 class="anchored" data-anchor-id="code">code</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> get_rotary_embedding(dim, seq_len):</span>
+<span id="cb2-2">&nbsp; &nbsp; <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Base: 10000 as used in original paper</span></span>
+<span id="cb2-3">&nbsp; &nbsp; inv_freq <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span> (torch.arange(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, dim, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> dim)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># N^(-2i/d) where i = [0,1,2,..d/2]</span></span>
+<span id="cb2-4">&nbsp; &nbsp; <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create position indices</span></span>
+<span id="cb2-5">&nbsp; &nbsp; positions <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.arange(seq_len).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This is going to act as n in n theta</span></span>
+<span id="cb2-6">&nbsp; &nbsp; <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Outer product (pos × freq)</span></span>
+<span id="cb2-7">&nbsp; &nbsp; freqs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.outer(positions, inv_freq) &nbsp;<span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (seq_len, dim // 2)</span></span>
+<span id="cb2-8">&nbsp; &nbsp; <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sin and cos for rotation</span></span>
+<span id="cb2-9">&nbsp; &nbsp; <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (seq_len, dim // 2) -&gt; (seq_len, dim)</span></span>
+<span id="cb2-10">&nbsp; &nbsp; freqs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.repeat_interleave(freqs, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb2-11">&nbsp; &nbsp; sin <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> freqs.sin() &nbsp;<span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (seq_len, dim)</span></span>
+<span id="cb2-12">&nbsp; &nbsp; cos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> freqs.cos() &nbsp;<span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (seq_len, dim)</span></span>
+<span id="cb2-13">&nbsp; &nbsp; <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> sin, cos</span>
+<span id="cb2-14"></span>
+<span id="cb2-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> invert_twin(x):</span>
+<span id="cb2-16">&nbsp; &nbsp; <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""[1,2,3,4,5,6,] -&gt; [-2, 1, -4, 3, -6, 5] for the last dim"""</span></span>
+<span id="cb2-17">&nbsp; &nbsp; x_odd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x[..., ::<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]</span>
+<span id="cb2-18">&nbsp; &nbsp; x_even <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x[..., <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>::<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]</span>
+<span id="cb2-19">&nbsp; &nbsp; <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> torch.stack((<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>x_even, x_odd), dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>).flatten(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb2-20"></span>
+<span id="cb2-21"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> apply_rotary(q, k, sin, cos):</span>
+<span id="cb2-22">&nbsp; &nbsp; <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb2-23"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; Args:</span></span>
+<span id="cb2-24"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; &nbsp; &nbsp; q: [BS, seq_len, dim]</span></span>
+<span id="cb2-25"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; &nbsp; &nbsp; k: [BS, seq_len, dim]</span></span>
+<span id="cb2-26"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; &nbsp; &nbsp; sin: [seq_len, dim]</span></span>
+<span id="cb2-27"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; &nbsp; &nbsp; cos: [seq_len, dim]</span></span>
+<span id="cb2-28"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&nbsp; &nbsp; """</span></span>
+<span id="cb2-29">&nbsp; &nbsp; q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> q<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>cos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> invert_twin(q)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>sin</span>
+<span id="cb2-30">&nbsp; &nbsp; k <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> k<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>cos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> invert_twin(k)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>sin</span>
+<span id="cb2-31">&nbsp; &nbsp; <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> q,k</span></code></pre></div></div>
+</section>
+<section id="extrapolation" class="level3">
+<h3 class="anchored" data-anchor-id="extrapolation">extrapolation?</h3>
+<ul>
+<li>this is applied on the query &amp; keys not values, thus position encoded only in attention values. less overfitting to specific position values</li>
+<li>this also works on the relative position not the absolute position of the tokens, and the distance between token matters.</li>
+<li>evidence suggests it is better than sinusoidal encodings</li>
+</ul>
+</section>
+<section id="how-relative-position" class="level3">
+<h3 class="anchored" data-anchor-id="how-relative-position">how relative position?</h3>
+<ul>
+<li>so the rotation <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> not just encode the position of that token, how it is applied actually tells us</li>
+<li>that we’re encoding the distance between two tokens.</li>
+<li>when the query and key embedding interact in self attention, their relative distance matters <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125163442.png" class="img-fluid"> <img src="https://raw.githubusercontent.com/siddhantoon/storage/main/Positonal-Encoding_20251126_183714/Pasted-image-20251125163505.png" class="img-fluid"></li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">conclusion</h2>
+<p>this is most widely used way to encode positional info, there are ways to improve upon it</p>
+<p>topics i’ll be exploring later -</p>
+<ul>
+<li>Position Interpolation</li>
+<li>YaRN</li>
+<li>NTK-Aware scaling</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://siddhantoon.github.io/posts/why-positional-encoding/</guid>
+  <pubDate>Fri, 28 Nov 2025 18:30:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
