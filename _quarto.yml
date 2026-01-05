@@ -10,7 +10,7 @@ website:
     left:
       - text: "About"
         href: about.qmd
-      - text: "Blog"
+      - text: "Blogs"
         href: blog.qmd
     right:
       - icon: twitter-x

@@ -4,4 +4,86 @@ page-layout: full
 title-block-banner: false
 ---
 
-(Content coming soon)
+Hi, I’m **Siddhant** 👋
+I’m a Machine Learning Engineer who loves building **practical AI systems** and sharing what I learn along the way.
+
+This blog is my space to **learn in public** — a place where I document concepts, experiments, failures, and “aha” moments. If you’re into **Deep Learning**, **LLMs**, **NLP**, **Python**, or building systems like **RAG** and **search**, you’ll feel at home here.
+
+---
+
+## What I do right now
+
+I currently work as a **Machine Learning Engineer at OMEGA Labs**, where I focus on **LLM evaluation and incentive design** in a decentralized AI setting. A big part of my work is building evaluation pipelines, finding issues in existing scoring, and designing mechanisms that reward genuinely better models — not just “good-looking metrics.” 
+
+---
+
+## My background (and how I got here)
+
+Over the past **3+ years**, I’ve worked deeply in the **Document AI** space — building and scaling pipelines that extract, structure, and validate information from messy, real-world documents. 
+
+Previously, I was a **Data Scientist II at Wolters Kluwer (Jun 2023 – Jun 2025)**, where I worked across multiple products and problem types, including:
+
+* **RAG + search systems**: Built a hybrid approach combining historical user queries with rule-based results to improve search relevance. 
+* **Information extraction from PDFs**: Integrated **AWS Textract** and later added **LLM-based structured extraction** (few-shot + structured outputs), with a workflow that made onboarding faster and more configurable for operations teams. 
+* **Rule clustering & reuse**: Found redundancy in large rule sets, clustered similar rules (with GPT-4o-assisted logic), and built a **search workbench** on **Azure AI Search** to help users navigate and reuse them. 
+* **Document classification**: Added page-level classification using **DONUT** to reduce manual work across multi-state form variations. 
+
+I started even earlier as a **Data Science Intern at Wolters Kluwer (Jul 2022 – May 2023)**, and also worked as a **Data Science Intern at Mowito**, where I explored object detection approaches on SKU/image datasets. 
+
+---
+
+## Before AI: robotics and computer vision 🤖
+
+Before I went all-in on LLMs and DocAI, I was deep into **robotics** — building, experimenting, and learning through hands-on projects. That naturally pulled me into **computer vision**, where I worked with both classical techniques (OpenCV, edge detection, Hough transforms) and deep learning models like **YOLO**. 
+
+I’ve also built projects like an **image caption generator**, **mask detection**, a **sign-detection robot**, and explored ideas like **variational autoencoders** for representation learning. 
+
+---
+
+## What I’m learning these days
+
+Right now, I’m focused on going deeper into:
+
+* **Transformers & LLM architecture** (not just using them — understanding them)
+* **Evaluation** (what metrics lie, what signals matter, how to stress-test systems)
+* **RAG & smart search** in real products (latency, observability, failure modes, cost)
+* **Kaggle competitions** to stay sharp and hands-on
+
+---
+
+## My toolkit
+
+I work mostly in **Python**, and I’m comfortable taking projects from experimentation → pipelines → deployment.
+
+Some tools I regularly use:
+**PyTorch**, **Hugging Face Transformers**, **LangChain**, **FastAPI/Django**, **Docker**, **SQL**, **Azure AI Search / Azure Doc Intelligence**, **AWS Textract**, vector DBs (e.g., **ChromaDB**), and MLOps tooling like **MLflow / Weights & Biases**. 
+
+---
+
+## A few highlights (for quick context)
+
+* **B.Tech (ECE), IIIT Pune — May 2023** 
+* **2nd place — DOXA AI Hackathon (Mar 2025)** 
+* **2nd place — ROS Hackathon (IRC, Jul 2021)** 
+* Mentorship under **RigBetel Labs** + founded the **Robotics Club** at IIIT Pune 
+
+---
+
+## Let’s connect
+
+If you’re curious about **NLP**, **LLMs**, **Document Intelligence**, **RAG**, or building **scalable AI systems**, I’d love to connect.
+
+* 📩 Email: **[siddhantoon@gmail.com](mailto:siddhantoon@gmail.com)** 
+* 🔗 You can also find my **GitHub / LinkedIn** via the links on this site.
+
+### Freelance / consulting
+
+I’m available for **freelance or consulting** in:
+
+* Document Intelligence (extraction, classification, validation)
+* RAG + search systems (retrieval, evaluation, production readiness)
+* ML engineering (pipelines, deployment, experimentation workflows)
+
+### Kaggle / hackathons
+
+If you’re up for teaming on **Kaggle or hackathons**, ping me — always down to learn together 🚀

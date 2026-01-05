@@ -18,7 +18,7 @@ Hi, I'm **Siddhant** 👋
 This blog is my space to *learn in public* — to share what I discover and connect with others on a similar path.
 If you're into (or wanna get into) **Deep Learning**, **LLMs**, or **Python**, you're in the right place.
 
-I currently work as a **Data Scientist-II** at **Wolters Kluwer**. Over the past 3 years, I've been building and scaling intelligent pipelines in the **Document AI** space — processing unstructured documents. Recently, building systems around **Retrieval-Augmented Generation (RAG)** and smart search.
+I currently work as a **Machine Learning Engineer** at **OMEGA Labs**. Over the past 3 years, I've been building and scaling intelligent pipelines in the **Document AI** space — processing unstructured documents. Recently, building systems around **Retrieval-Augmented Generation (RAG)** and smart search.
 
 On the side, I've freelanced as a **Python dev** and **AI engineer** — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.
 
