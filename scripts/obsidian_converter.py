@@ -13,15 +13,9 @@ def load_config():
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
-def extract_title(content, filename):
-    """Extract title from content or filename."""
-    # Try to find first H1 heading
-    match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
-    if match:
-        return match.group(1).strip()
-
-    # Fall back to filename
-    return filename.replace('-', ' ').replace('_', ' ').title()
+def extract_title(filename):
+    """Extract title from filename."""
+    return filename
 
 def find_image_references(content):
     """Find all image references in the markdown content."""
@@ -55,19 +49,63 @@ def convert_image_references(content, image_mapping):
 
     return content
 
-def convert_obsidian_note(note_path, slug):
+def fix_markdown_spacing(content):
+    """Add blank lines before and after images, before headings, and before the first bullet point in a list."""
+    lines = content.split('\n')
+    fixed_lines = []
+
+    def is_bullet_point(line):
+        """Check if a line is a bullet point or numbered list item."""
+        stripped = line.strip()
+        if not stripped:
+            return False
+        return stripped.startswith(('-', '*', '+')) or (len(stripped) > 0 and stripped[0].isdigit() and '.' in stripped[:4])
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+
+        # Check if we need a blank line before this line
+        needs_blank_before = False
+        if stripped:
+            # Before images
+            if stripped.startswith('!'):
+                needs_blank_before = True
+            # Before headings
+            elif stripped.startswith('#'):
+                needs_blank_before = True
+            # Before first bullet point in a list (check if previous line is not a bullet)
+            elif is_bullet_point(line):
+                if i > 0 and not is_bullet_point(lines[i - 1]):
+                    needs_blank_before = True
+
+        # Add blank line if needed and previous line wasn't blank
+        if needs_blank_before and fixed_lines and fixed_lines[-1].strip():
+            fixed_lines.append('')
+
+        fixed_lines.append(line)
+
+        # Add blank line after images
+        if stripped and stripped.startswith('!'):
+            # Check if next line exists and is not blank
+            if i + 1 < len(lines) and lines[i + 1].strip():
+                fixed_lines.append('')
+
+    return '\n'.join(fixed_lines)
+
+def convert_obsidian_note(note_path, attachments_path, slug):
     """
     Convert an Obsidian note to a Quarto post.
 
     Args:
         note_path: Path to the Obsidian note
+        attachments_path: Path to the attachments/assets folder
         slug: URL slug for the post
 
     Raises:
         FileExistsError: If the post directory already exists
     """
-    config = load_config()
     note_path = Path(note_path)
+    attachments_path = Path(attachments_path)
 
     # Determine project root (parent of scripts directory)
     project_root = Path(__file__).parent.parent
@@ -82,8 +120,8 @@ def convert_obsidian_note(note_path, slug):
     with open(note_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Extract title
-    title = extract_title(content, note_path.stem)
+    # Extract title from filename
+    title = extract_title(note_path.stem)
 
     # Find all image references
     image_refs = find_image_references(content)
@@ -93,8 +131,6 @@ def convert_obsidian_note(note_path, slug):
 
     # Copy images and build mapping
     image_mapping = {}
-    vault_path = Path(config['vault_path'])
-    attachments_folder = config['attachments_folder']
 
     for image_ref in image_refs:
         # Extract just the filename from the reference
@@ -102,8 +138,7 @@ def convert_obsidian_note(note_path, slug):
 
         # Try to find the image in various locations
         possible_paths = [
-            vault_path / attachments_folder / image_filename,
-            note_path.parent / attachments_folder / image_filename,
+            attachments_path / image_filename,
             note_path.parent / image_filename,
         ]
 
@@ -124,11 +159,17 @@ def convert_obsidian_note(note_path, slug):
     # Convert image references in content
     content = convert_image_references(content, image_mapping)
 
+    # Fix markdown spacing
+    content = fix_markdown_spacing(content)
+
     # Generate front matter
     today = datetime.now().strftime("%Y-%m-%d")
     front_matter = {
         'title': title,
-        'date': today
+        'date': today,
+        'toc': True,
+        'toc-depth': 4,
+        'toc-expand': True
     }
 
     # Create final content with front matter
@@ -138,3 +179,25 @@ def convert_obsidian_note(note_path, slug):
     output_file = post_dir / "index.qmd"
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(final_content)
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) != 4:
+        print("Usage: python obsidian_converter.py <note_path> <attachments_path> <slug>")
+        print("Example: python obsidian_converter.py 'my note.md' 'path/to/assets' my-post-slug")
+        sys.exit(1)
+
+    note_path = sys.argv[1]
+    attachments_path = sys.argv[2]
+    slug = sys.argv[3]
+
+    try:
+        convert_obsidian_note(note_path, attachments_path, slug)
+        print(f"Successfully converted note to posts/{slug}/")
+    except FileExistsError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
