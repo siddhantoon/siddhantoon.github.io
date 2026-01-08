@@ -10,7 +10,116 @@
 <atom:link href="https://siddhantoon.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Fri, 28 Nov 2025 18:30:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 07 Jan 2026 18:30:00 GMT</lastBuildDate>
+<item>
+  <title>PaliGemma from scratch - Vision Language model basics</title>
+  <link>https://siddhantoon.github.io/posts/paligemma-vision-language-basics/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="paligemma-from-scratch---vision-language-model-basics" class="level1">
+<h1>PaliGemma from scratch - Vision Language model basics</h1>
+<p>We have to make a model which can understand images. A basic vision model.</p>
+<p>We will have a vision model and a main language model, because we need a language model to basically interact in language.</p>
+<ul>
+<li>We take the image pass it through a vision model and get it’s representations in some space(embeddings/tokens), then take the text prompt along with it -&gt; tokenize it.</li>
+<li>Now combine both text &amp; image tokens &amp; send it to a model(Gemma here). You can train this on whatever kind of task you think of doing with vision.</li>
+</ul>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107195904.png" class="img-fluid"></p>
+</section>
+<section id="vision-model" class="level1">
+<h1>Vision Model</h1>
+<p>This is trained using something called contrastive learning</p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107201553.png" class="img-fluid"></p>
+<ul>
+<li>Use text image pairs and align a vision model on it.</li>
+<li>text model generates text embedding, image model generates image embedding. Increase the dot product of the aligned pairs and decrease others. By this the model learns to represent the image in some way that is aligned with it’s text description</li>
+</ul>
+<p>We are using cross entropy, the <img src="https://latex.codecogs.com/png.latex?e%5E%7Bx_i%7D"> term may become so large that it doesn’t fit into memory. (float16, 32, whatever)</p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107202148.png" class="img-fluid"></p>
+<p>This is <a href="https://openai.com/index/clip/">CLIP</a> the image understanding model.</p>
+<p>but, some things to consider yet -</p>
+<ul>
+<li><p>at any given time you need at least one full row or column to compute the loss</p></li>
+<li><p>makes it difficult to parallelize</p></li>
+<li><p>has a lot of operations -</p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107202549.png" class="img-fluid"></p></li>
+</ul>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107202718.png" class="img-fluid"></p>
+<ul>
+<li>This solves the issue of using full rows/columns, instead we can backpropagate a single cell loss.</li>
+<li>We can use large batch sizes This is Sigmoid-LIP -&gt; SigLIP, a significant improvement over CLIP</li>
+</ul>
+</section>
+<section id="vision-model-architecture-siglip" class="level1">
+<h1>Vision Model Architecture (SigLIP)</h1>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108130722.png" class="img-fluid"></p>
+<p>Let’s see the <strong>Vision transformer</strong> in detail…</p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107203056.png" class="img-fluid"></p>
+<p>Implementation <a href="https://github.com/siddhantoon/vlm/blob/64f6a38ef7c22c39d0479c3ea9ad5387b5e98f91/modelling_siglip.py#L195">here</a> for SigLIP</p>
+<p>We have the contextualized patch embeddings as output of vision model. We will call this image tokens now.</p>
+<p>Now let’s come to the language model - Gemma from scratch</p>
+</section>
+<section id="gemma-architecture" class="level1">
+<h1>Gemma architecture</h1>
+<p>In this section we are talking about Gemma part -</p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108140600.png" class="img-fluid"></p>
+<section id="components-in-gemma--" class="level3">
+<h3 class="anchored" data-anchor-id="components-in-gemma--">Components in Gemma -</h3>
+<ul>
+<li>Rotary position encodings - I’ve already explained it into detail <a href="https://siddhantoon.github.io/posts/why-positional-encoding/#rotary-positional-encoding-rope">here</a></li>
+<li>RMS Norm</li>
+<li>Group Query Attention</li>
+<li>Feedforward - nothing interesting to deepdive</li>
+</ul>
+</section>
+<section id="rms-norm---simply-rms-norm" class="level2">
+<h2 class="anchored" data-anchor-id="rms-norm---simply-rms-norm">RMS Norm - Simply RMS norm</h2>
+<ul>
+<li>To reduce internal covariate shift - Batch norm was introduced</li>
+<li>Then we started using Layer Norm because Batch norm was kind of mixing the statistics for different items with each other which is kinda weird.</li>
+<li>Layer norm is to center the distribution of outputs of a layer around 0 (with 1 std).</li>
+<li>RMSNorm says why do we need to center it around 0 - it should be centered around any value just being centered is important</li>
+<li>So they calculate the RMS of a layer - and <img src="https://latex.codecogs.com/png.latex?%0A%20%20%5Cbar%7Ba%7D_i%20=%20%5Cfrac%7Ba_i%7D%7B%5Cmathrm%7BRMS%7D(a)%7D%5C,%20g_i,%0A%20%20%5Cqquad%20%5Ctext%7Bwhere%7D%20%5Cqquad%0A%20%20%5Cmathrm%7BRMS%7D(a)%20=%20%5Csqrt%7B%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5E%7Bn%7D%20a_i%5E2%20%7D%0A%20%20"></li>
+</ul>
+</section>
+<section id="group-query-attention" class="level2">
+<h2 class="anchored" data-anchor-id="group-query-attention">Group Query Attention</h2>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108140502.png" class="img-fluid"></p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108140516.png" class="img-fluid"></p>
+<p>The implementation is <a href="https://github.com/siddhantoon/vlm/blob/02f6188456a855b9a79633c45b391965e05e1217/modelling_gemma.py#L436">here</a></p>
+</section>
+</section>
+<section id="pali-gemma" class="level1">
+<h1>Pali-Gemma</h1>
+<p>The whole end to end architecture we are making is called Pali-Gemma. We have created the components - let’s go through how this works end to end</p>
+<ul>
+<li>image -&gt; split into patches(224) -&gt; pass through image model -&gt; image tokens/embeddings</li>
+<li>text -&gt; tokenize -&gt; text tokens We have text tokens and image tokens, how are these being combined, what kind of tasks what kind of predictions we do</li>
+</ul>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108165917.png" class="img-fluid"></p>
+<ul>
+<li>This is to illustrate we have more than 3 tokens for image. Prefix is the prompt which is given to the model along with the text.</li>
+<li>Target is what the model needs to predict.</li>
+<li>Image tokens are not masked because, there is no autoregressive relationship between the image patches.</li>
+<li>Prefix not being masked is an interesting thing - but it’s just a choice of authors to do so. Even though the decoder language models are not trained in this way, they are trained as causal LM (masked) - but still here they haven’t done.
+<ul>
+<li>One reason can be because the prefixes also control the behavior such as “question answering”, “captioning”, “segmentation”, “detect”, etc. Some examples from the paper</li>
+</ul></li>
+</ul>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108171818.png" class="img-fluid"></p>
+<p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260108171900.png" class="img-fluid"></p>
+<p>Full code for PaliGemma architecture+inference <a href="https://github.com/siddhantoon/vlm">here</a>. This was created while following a very good lecture by Umar Jamil on <a href="https://www.youtube.com/watch?v=vAmKB7iPkWw">VLM from scratch</a></p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://siddhantoon.github.io/posts/paligemma-vision-language-basics/</guid>
+  <pubDate>Wed, 07 Jan 2026 18:30:00 GMT</pubDate>
+</item>
 <item>
   <title>what/why/how positional encodings?</title>
   <link>https://siddhantoon.github.io/posts/why-positional-encoding/</link>

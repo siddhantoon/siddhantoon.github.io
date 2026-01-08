@@ -42,11 +42,25 @@
     "text": "conclusion\nthis is most widely used way to encode positional info, there are ways to improve upon it\ntopics i’ll be exploring later -\n\nPosition Interpolation\nYaRN\nNTK-Aware scaling"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Siddhant's Blog",
+    "objectID": "posts/paligemma-vision-language-basics/index.html",
+    "href": "posts/paligemma-vision-language-basics/index.html",
+    "title": "PaliGemma from scratch - Vision Language model basics",
     "section": "",
-    "text": "Hi, I’m Siddhant 👋\nThis blog is my space to learn in public — to share what I discover and connect with others on a similar path. If you’re into (or wanna get into) Deep Learning, LLMs, or Python, you’re in the right place.\nI currently work as a Machine Learning Engineer at OMEGA Labs. Over the past 3 years, I’ve been building and scaling intelligent pipelines in the Document AI space — processing unstructured documents. Recently, building systems around Retrieval-Augmented Generation (RAG) and smart search.\nOn the side, I’ve freelanced as a Python dev and AI engineer — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.\nBefore AI fever, I was deep into robotics 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into computer vision, where I worked with both classical algorithms and deep nn models like YOLO, ResNets, and GANs.\nThese days, I’m focused on learning transformers and LLM architectures in depth. Alongside, exploring Kaggle competitions to stay hands-on and push my thinking through experimentation.\n\nIf you’re curious about NLP, LLMs, document intelligence, or building scalable AI systems — I’d love to connect.\n👉 Available for freelance or consulting in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.\n🚀 Up for teaming on Kaggle or hackathons? Ping me on Discord — always down to learn together.\n\n\nBlogs\n\n\n\n\n\nwhat/why/how positional encodings?\n\n\n\n\n\n\n\n\nNov 29, 2025\n\n\n\n\n\n\n\nThe Loss That Learned Everything\n\n\nAn exploration of loss functions and their role in machine learning optimization\n\n\n\n\n\nApr 4, 2025\n\n\n\n\n\nNo matching items\n\n\nShow More →"
+    "text": "We have to make a model which can understand images. A basic vision model.\nWe will have a vision model and a main language model, because we need a language model to basically interact in language.\n\nWe take the image pass it through a vision model and get it’s representations in some space(embeddings/tokens), then take the text prompt along with it -&gt; tokenize it.\nNow combine both text & image tokens & send it to a model(Gemma here). You can train this on whatever kind of task you think of doing with vision."
+  },
+  {
+    "objectID": "posts/paligemma-vision-language-basics/index.html#rms-norm---simply-rms-norm",
+    "href": "posts/paligemma-vision-language-basics/index.html#rms-norm---simply-rms-norm",
+    "title": "PaliGemma from scratch - Vision Language model basics",
+    "section": "RMS Norm - Simply RMS norm",
+    "text": "RMS Norm - Simply RMS norm\n\nTo reduce internal covariate shift - Batch norm was introduced\nThen we started using Layer Norm because Batch norm was kind of mixing the statistics for different items with each other which is kinda weird.\nLayer norm is to center the distribution of outputs of a layer around 0 (with 1 std).\nRMSNorm says why do we need to center it around 0 - it should be centered around any value just being centered is important\nSo they calculate the RMS of a layer - and \\[\n  \\bar{a}_i = \\frac{a_i}{\\mathrm{RMS}(a)}\\, g_i,\n  \\qquad \\text{where} \\qquad\n  \\mathrm{RMS}(a) = \\sqrt{\\frac{1}{n} \\sum_{i=1}^{n} a_i^2 }\n  \\]"
+  },
+  {
+    "objectID": "posts/paligemma-vision-language-basics/index.html#group-query-attention",
+    "href": "posts/paligemma-vision-language-basics/index.html#group-query-attention",
+    "title": "PaliGemma from scratch - Vision Language model basics",
+    "section": "Group Query Attention",
+    "text": "Group Query Attention\n\n\nThe implementation is here"
   },
   {
     "objectID": "about.html",
@@ -103,6 +117,13 @@
     "title": "Siddhant's Blog",
     "section": "Let’s connect",
     "text": "Let’s connect\nIf you’re curious about NLP, LLMs, Document Intelligence, RAG, or building scalable AI systems, I’d love to connect.\n\n📩 Email: siddhantoon@gmail.com\n🔗 You can also find my GitHub / LinkedIn via the links on this site.\n\n\nFreelance / consulting\nI’m available for freelance or consulting in:\n\nDocument Intelligence (extraction, classification, validation)\nRAG + search systems (retrieval, evaluation, production readiness)\nML engineering (pipelines, deployment, experimentation workflows)\n\n\n\nKaggle / hackathons\nIf you’re up for teaming on Kaggle or hackathons, ping me — always down to learn together 🚀"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Siddhant's Blog",
+    "section": "",
+    "text": "Hi, I’m Siddhant 👋\nThis blog is my space to learn in public — to share what I discover and connect with others on a similar path. If you’re into (or wanna get into) Deep Learning, LLMs, or Python, you’re in the right place.\nI currently work as a Machine Learning Engineer at OMEGA Labs. Over the past 3 years, I’ve been building and scaling intelligent pipelines in the Document AI space — processing unstructured documents. Recently, building systems around Retrieval-Augmented Generation (RAG) and smart search.\nOn the side, I’ve freelanced as a Python dev and AI engineer — sharpening my programming skills and gaining a broad view of how AI projects come together end to end.\nBefore AI fever, I was deep into robotics 🤖 — experimenting in simulation and occasionally with real hardware (when someone sponsored). That path eventually led me into computer vision, where I worked with both classical algorithms and deep nn models like YOLO, ResNets, and GANs.\nThese days, I’m focused on learning transformers and LLM architectures in depth. Alongside, exploring Kaggle competitions to stay hands-on and push my thinking through experimentation.\n\nIf you’re curious about NLP, LLMs, document intelligence, or building scalable AI systems — I’d love to connect.\n👉 Available for freelance or consulting in AI/ML, Document Intelligence, or RAG-based systems — feel free to reach out.\n🚀 Up for teaming on Kaggle or hackathons? Ping me on Discord — always down to learn together.\n\n\nBlogs\n\n\n\n\n\nPaliGemma from scratch - Vision Language model basics\n\n\n\n\n\n\n\n\nJan 8, 2026\n\n\n\n\n\n\n\nwhat/why/how positional encodings?\n\n\n\n\n\n\n\n\nNov 29, 2025\n\n\n\n\n\n\n\nThe Loss That Learned Everything\n\n\nAn exploration of loss functions and their role in machine learning optimization\n\n\n\n\n\nApr 4, 2025\n\n\n\n\n\nNo matching items\n\n\nShow More →"
   },
   {
     "objectID": "posts/the-loss-that-learned-everything/index.html",
