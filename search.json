@@ -46,7 +46,7 @@
     "href": "posts/paligemma-vision-language-basics/index.html",
     "title": "PaliGemma from scratch - Vision Language model basics",
     "section": "",
-    "text": "We have to make a model which can understand images. A basic vision model.\nWe will have a vision model and a main language model, because we need a language model to basically interact in language.\n\nWe take the image pass it through a vision model and get it’s representations in some space(embeddings/tokens), then take the text prompt along with it -&gt; tokenize it.\nNow combine both text & image tokens & send it to a model(Gemma here). You can train this on whatever kind of task you think of doing with vision."
+    "text": "We have to make a model which can understand images. A basic vision model.\nWe will have a vision model and a main language model, because we need a language model to basically interact in language."
   },
   {
     "objectID": "posts/paligemma-vision-language-basics/index.html#rms-norm---simply-rms-norm",

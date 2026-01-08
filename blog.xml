@@ -19,8 +19,6 @@
 
 
 
-<section id="paligemma-from-scratch---vision-language-model-basics" class="level1">
-<h1>PaliGemma from scratch - Vision Language model basics</h1>
 <p>We have to make a model which can understand images. A basic vision model.</p>
 <p>We will have a vision model and a main language model, because we need a language model to basically interact in language.</p>
 <ul>
@@ -28,7 +26,6 @@
 <li>Now combine both text &amp; image tokens &amp; send it to a model(Gemma here). You can train this on whatever kind of task you think of doing with vision.</li>
 </ul>
 <p><img src="https://siddhantoon.github.io/posts/paligemma-vision-language-basics/Pasted image 20260107195904.png" class="img-fluid"></p>
-</section>
 <section id="vision-model" class="level1">
 <h1>Vision Model</h1>
 <p>This is trained using something called contrastive learning</p>
