@@ -1,0 +1,121 @@
+---
+date: '2026-01-08'
+title: PaliGemma from scratch - Vision Language model basics
+toc: true
+toc-depth: 4
+toc-expand: true
+---
+
+# PaliGemma from scratch - Vision Language model basics
+
+We have to make a model which can understand images. A basic vision model.
+
+We will have a vision model and a main language model, because we need a language model to basically interact in language.
+
+- We take the image pass it through a vision model and get it's representations in some space(embeddings/tokens), then take the text prompt along with it -> tokenize it. 
+- Now combine both text & image tokens & send it to a model(Gemma here).
+You can train this on whatever kind of task you think of doing with vision.
+
+![](Pasted image 20260107195904.png)
+
+# Vision Model
+This is trained using something called contrastive learning
+
+![](Pasted image 20260107201553.png)
+
+- Use text image pairs and align a vision model on it.
+- text model generates text embedding, image model generates image embedding. Increase the dot product of the aligned pairs and decrease others.
+By this the model learns to represent the image in some way that is aligned with it's text description
+
+We are using cross entropy, the $e^{x_i}$ term may become so large that it doesn't fit into memory. (float16, 32, whatever)
+
+![](Pasted image 20260107202148.png)
+
+This is [CLIP](https://openai.com/index/clip/) the image understanding model.
+
+but, some things to consider yet -
+
+- at any given time you need at least one full row or column to compute the loss
+- makes it difficult to parallelize
+- has a lot of operations -
+
+	![](Pasted image 20260107202549.png)
+
+
+![](Pasted image 20260107202718.png)
+
+- This solves the issue of using full rows/columns, instead we can backpropagate a single cell loss.
+- We can use large batch sizes
+This is Sigmoid-LIP -> SigLIP, a significant improvement over CLIP
+
+# Vision Model Architecture (SigLIP)
+
+![](Pasted image 20260108130722.png)
+
+Let's see the **Vision transformer** in detail...
+
+![](Pasted image 20260107203056.png)
+
+
+Implementation [here](https://github.com/siddhantoon/vlm/blob/64f6a38ef7c22c39d0479c3ea9ad5387b5e98f91/modelling_siglip.py#L195) for SigLIP
+
+We have the contextualized patch embeddings as output of vision model. We will call this image tokens now.
+
+Now let's come to the language model - Gemma from scratch
+
+# Gemma architecture
+In this section we are talking about Gemma part -
+
+![](Pasted image 20260108140600.png)
+
+### Components in Gemma -
+
+- Rotary position encodings - I've already explained it into detail [here](https://siddhantoon.github.io/posts/why-positional-encoding/#rotary-positional-encoding-rope) 
+- RMS Norm
+- Group Query Attention
+- Feedforward - nothing interesting to deepdive
+
+## RMS Norm - Simply RMS norm
+
+- To reduce internal covariate shift - Batch norm was introduced
+- Then we started using Layer Norm because Batch norm was kind of mixing the statistics for different items with each other which is kinda weird.
+- Layer norm is to center the distribution of outputs of a layer around 0 (with 1 std). 
+- RMSNorm says why do we need to center it around 0 - it should be centered around any value just being centered is important
+- So they calculate the RMS of a layer - and
+	$$
+	\bar{a}_i = \frac{a_i}{\mathrm{RMS}(a)}\, g_i,
+	\qquad \text{where} \qquad
+	\mathrm{RMS}(a) = \sqrt{\frac{1}{n} \sum_{i=1}^{n} a_i^2 }
+	$$
+
+## Group Query Attention
+
+![](Pasted image 20260108140502.png)
+
+![](Pasted image 20260108140516.png)
+
+
+The implementation is [here](https://github.com/siddhantoon/vlm/blob/02f6188456a855b9a79633c45b391965e05e1217/modelling_gemma.py#L436) 
+
+# Pali-Gemma
+The whole end to end architecture we are making is called Pali-Gemma.
+We have created the components - let's go through how this works end to end
+
+- image -> split into patches(224) -> pass through image model -> image tokens/embeddings
+- text -> tokenize -> text tokens
+We have text tokens and image tokens, how are these being combined, what kind of tasks what kind of predictions we do
+
+![](Pasted image 20260108165917.png)
+
+- This is to illustrate we have more than 3 tokens for image. Prefix is the prompt which is given to the model along with the text.
+- Target is what the model needs to predict.
+- Image tokens are not masked because, there is no autoregressive relationship between the image patches.
+- Prefix not being masked is an interesting thing - but it's just a choice of authors to do so. Even though the decoder language models are not trained in this way, they are trained as causal LM (masked) - but still here they haven't done.
+	- One reason can be because the prefixes also control the behavior such as "question answering", "captioning", "segmentation", "detect", etc.
+Some examples from the paper
+
+![](Pasted image 20260108171818.png)
+
+![](Pasted image 20260108171900.png)
+
+Full code for PaliGemma architecture+inference [here](https://github.com/siddhantoon/vlm). This was created while following a very good lecture by Umar Jamil on [VLM from scratch](https://www.youtube.com/watch?v=vAmKB7iPkWw) 
