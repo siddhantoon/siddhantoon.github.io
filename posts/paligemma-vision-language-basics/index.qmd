@@ -6,8 +6,6 @@ toc-depth: 4
 toc-expand: true
 ---
 
-# PaliGemma from scratch - Vision Language model basics
-
 We have to make a model which can understand images. A basic vision model.
 
 We will have a vision model and a main language model, because we need a language model to basically interact in language.
